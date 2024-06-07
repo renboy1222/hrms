@@ -1,0 +1,429 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
+ */
+package com.aldrin.hrms.gui.dialog.au;
+
+import com.aldrin.hrms.Hrms;
+import com.aldrin.hrms.dao.impl.RoomDAOImpl;
+import com.aldrin.hrms.dao.impl.RoomStatusDAOImpl;
+import com.aldrin.hrms.dao.impl.RoomTypeDAOImpl;
+import com.aldrin.hrms.dao.impl.StoreyDAOImpl;
+import com.aldrin.hrms.gui.JFrameHRMS;
+import com.aldrin.hrms.model.Room;
+import com.aldrin.hrms.model.RoomStatus;
+import com.aldrin.hrms.model.RoomType;
+import com.aldrin.hrms.model.Storey;
+import com.aldrin.hrms.util.ComboBoxList;
+import com.aldrin.hrms.util.NumberInput;
+import com.formdev.flatlaf.FlatClientProperties;
+import com.formdev.flatlaf.extras.FlatSVGIcon;
+import java.awt.AlphaComposite;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+
+/**
+ *
+ * @author ALDRIN B. C.
+ */
+public class JDialogRoomAU extends javax.swing.JDialog {
+
+    /**
+     * Creates new form JDialogCustomerAU
+     */
+    private JFrameHRMS jFrameHRMS;
+    private Room room = new Room();
+    static String title;
+    private RoomDAOImpl roomDAOImpl = new RoomDAOImpl();
+
+    public JDialogRoomAU(JFrameHRMS jFrameHRMS, boolean modal) {
+        super(jFrameHRMS, modal);
+        initComponents();
+        setTitle("Add");
+        this.title = "Add";
+        jButton1.setIcon(new FlatSVGIcon("svg/save.svg", 24, 24));
+        jTextFieldRoomNumber.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "ROOM NUMBER");
+        jTextFieldPrice.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "PRICE");
+        new NumberInput().doubleValidator(jTextFieldPrice);
+        comboBoxRoomType();
+        comboBoxRoomStatus();
+        comboBoxStorey();
+    }
+
+    public JDialogRoomAU(JFrameHRMS jFrameCafSys, boolean modal, Room room, String title) {
+        super(jFrameCafSys, modal);
+        initComponents();
+        setTitle(title);
+        this.title = title;
+        this.room = room;
+        jButton1.setIcon(new FlatSVGIcon("svg/edit.svg", 24, 24));
+        jButton1.setText(title);
+        jTextFieldRoomNumber.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "ROOM NUMBER");
+        jTextFieldPrice.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "PRICE");
+        jTextFieldRoomNumber.setText(room.getRoomNumber());
+        jTextFieldPrice.setText(String.valueOf(room.getPrice()));
+        comboBoxRoomType();
+        for (ComboBoxList a : this.roomTypeDAOImpl.getList()) {
+            a.setSelectedId(roomTypeDAOImpl.getList(), String.valueOf(room.getRoomType().getId()), jComboBoxRoomType);
+        }
+        comboBoxRoomStatus();
+        for (ComboBoxList a : this.roomStatusDAOImpl.getList()) {
+            a.setSelectedId(roomStatusDAOImpl.getList(), String.valueOf(room.getRoomStatus().getId()), jComboBoxRoomStatus);
+        }
+        comboBoxStorey();
+        for (ComboBoxList a : this.storeyDAOImpl.getList()) {
+            a.setSelectedId(storeyDAOImpl.getList(), String.valueOf(room.getStorey().getId()), jComboBoxStorey);
+        }
+        displayRoom(room);
+
+    }
+
+    public JDialogRoomAU(JFrameHRMS jFrameHRMS, boolean modal, String title, Room room) {
+        super(jFrameHRMS, modal);
+        initComponents();
+        setTitle(title);
+        this.room = room;
+        this.title = title;
+        jButton1.setIcon(new FlatSVGIcon("svg/delete.svg", 24, 24));
+        jButton1.setText(title);
+        jTextFieldRoomNumber.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "ROOM NUMBER");
+        jTextFieldPrice.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "PRICE");
+        jTextFieldRoomNumber.setText(room.getRoomNumber());
+        jTextFieldPrice.setText(String.valueOf(room.getPrice()));
+        comboBoxRoomType();
+        for (ComboBoxList a : this.roomTypeDAOImpl.getList()) {
+            a.setSelectedId(roomDAOImpl.getList(), String.valueOf(room.getRoomType().getId()), jComboBoxRoomType);
+        }
+        comboBoxRoomStatus();
+        for (ComboBoxList a : this.roomStatusDAOImpl.getList()) {
+            a.setSelectedId(roomStatusDAOImpl.getList(), String.valueOf(room.getRoomStatus().getId()), jComboBoxRoomStatus);
+        }
+        comboBoxStorey();
+        for (ComboBoxList a : this.storeyDAOImpl.getList()) {
+            a.setSelectedId(storeyDAOImpl.getList(), String.valueOf(room.getStorey().getId()), jComboBoxStorey);
+        }
+        
+        displayRoom(room);
+
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jFileChooser1 = new javax.swing.JFileChooser();
+        jLabel1 = new javax.swing.JLabel();
+        jTextFieldRoomNumber = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jTextFieldPrice = new javax.swing.JTextField();
+        jComboBoxRoomStatus = new javax.swing.JComboBox<>();
+        jComboBoxRoomType = new javax.swing.JComboBox<>();
+        jPanel1 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabelPicture = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel8 = new javax.swing.JLabel();
+        jComboBoxStorey = new javax.swing.JComboBox<>();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel1.setText("ROOM NUMBER:");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(5, 20, 110, 30));
+        getContentPane().add(jTextFieldRoomNumber, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 20, 220, 30));
+
+        jButton1.setText("Save");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 240, 160, 30));
+
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel5.setText("STOREY:");
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 180, 110, 30));
+
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel6.setText("PRICE:");
+        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(5, 60, 110, 30));
+
+        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel7.setText("TYPE:");
+        getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(5, 100, 110, 30));
+        getContentPane().add(jTextFieldPrice, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 60, 220, 30));
+
+        getContentPane().add(jComboBoxRoomStatus, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 140, 220, 30));
+
+        getContentPane().add(jComboBoxRoomType, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 100, 220, 30));
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102)), "PHOTO", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 12), new java.awt.Color(0, 102, 153))); // NOI18N
+        jPanel1.setMaximumSize(new java.awt.Dimension(215, 225));
+        jPanel1.setMinimumSize(new java.awt.Dimension(215, 225));
+        jPanel1.setPreferredSize(new java.awt.Dimension(215, 225));
+        jPanel1.setLayout(new java.awt.BorderLayout());
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102)));
+        jPanel2.setLayout(new java.awt.BorderLayout());
+
+        jLabelPicture.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabelPicture.setText("NO PHOTO");
+        jLabelPicture.setToolTipText("");
+        jLabelPicture.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabelPictureMouseClicked(evt);
+            }
+        });
+        jPanel2.add(jLabelPicture, java.awt.BorderLayout.CENTER);
+
+        jPanel1.add(jPanel2, java.awt.BorderLayout.CENTER);
+
+        jPanel3.setPreferredSize(new java.awt.Dimension(210, 0));
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 200, Short.MAX_VALUE)
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
+        jPanel1.add(jPanel3, java.awt.BorderLayout.NORTH);
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 15, 210, 200));
+
+        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel8.setText("STATUS:");
+        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 140, 110, 30));
+
+        getContentPane().add(jComboBoxStorey, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 180, 220, 30));
+
+        setSize(new java.awt.Dimension(612, 340));
+        setLocationRelativeTo(null);
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        if (this.title.equals("Add")) {
+            int response = JOptionPane.showConfirmDialog(jFrameHRMS, "Are you sure to save " + jTextFieldRoomNumber.getText() + " ?", "Save confirmation", JOptionPane.YES_NO_OPTION);
+            if (response == JOptionPane.YES_OPTION) {
+                this.room.setId(null);
+                this.room.setRoomNumber(jTextFieldRoomNumber.getText());
+                this.room.setPrice(Float.parseFloat(jTextFieldPrice.getText()));
+                ComboBoxList typeId = (ComboBoxList) this.jComboBoxRoomType.getSelectedItem();
+                RoomType rt = new RoomType();
+                rt.setId(typeId.getId());
+                this.room.setRoomType(rt);
+                ComboBoxList statusId = (ComboBoxList) this.jComboBoxRoomStatus.getSelectedItem();
+                RoomStatus rs = new RoomStatus();
+                rs.setId(statusId.getId());
+                this.room.setRoomStatus(rs);
+                ComboBoxList storeyId = (ComboBoxList) this.jComboBoxStorey.getSelectedItem();
+                Storey st = new Storey();
+                st.setId(storeyId.getId());
+                this.room.setStorey(st);
+                roomDAOImpl.addRoom(room);
+                this.dispose();
+            }
+        } else if (this.title.equals("Update")) {
+            int response = JOptionPane.showConfirmDialog(jFrameHRMS, "Are you sure to update " + jTextFieldRoomNumber.getText() + " ?", "Save confirmation", JOptionPane.YES_NO_OPTION);
+            if (response == JOptionPane.YES_OPTION) {
+                this.room.setRoomNumber(jTextFieldRoomNumber.getText());
+                this.room.setPrice(Float.parseFloat(jTextFieldPrice.getText()));
+                ComboBoxList typeId = (ComboBoxList) this.jComboBoxRoomType.getSelectedItem();
+                RoomType rt = new RoomType();
+                rt.setId(typeId.getId());
+                this.room.setRoomType(rt);
+                ComboBoxList statusId = (ComboBoxList) this.jComboBoxRoomStatus.getSelectedItem();
+                RoomStatus rs = new RoomStatus();
+                rs.setId(statusId.getId());
+                this.room.setRoomStatus(rs);
+                ComboBoxList storeyId = (ComboBoxList) this.jComboBoxStorey.getSelectedItem();
+                Storey st = new Storey();
+                st.setId(storeyId.getId());
+                this.room.setStorey(st);
+                roomDAOImpl.updateRoom(room);
+                this.dispose();
+            }
+        } else if (this.title.equals("Delete")) {
+            int response = JOptionPane.showConfirmDialog(jFrameHRMS, "Are you sure to delete " + jTextFieldRoomNumber.getText() + " ?", "Save confirmation", JOptionPane.YES_NO_OPTION);
+            if (response == JOptionPane.YES_OPTION) {
+                roomDAOImpl.deleteRoom(room);
+                this.dispose();
+            }
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jLabelPictureMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabelPictureMouseClicked
+
+        browse();
+    }//GEN-LAST:event_jLabelPictureMouseClicked
+
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JComboBox<Object> jComboBoxRoomStatus;
+    private javax.swing.JComboBox<Object> jComboBoxRoomType;
+    private javax.swing.JComboBox<Object> jComboBoxStorey;
+    private javax.swing.JFileChooser jFileChooser1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabelPicture;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JTextField jTextFieldPrice;
+    private javax.swing.JTextField jTextFieldRoomNumber;
+    // End of variables declaration//GEN-END:variables
+
+    private RoomTypeDAOImpl roomTypeDAOImpl = new RoomTypeDAOImpl();
+    private RoomStatusDAOImpl roomStatusDAOImpl = new RoomStatusDAOImpl();
+    private StoreyDAOImpl storeyDAOImpl = new StoreyDAOImpl();
+
+    private void comboBoxRoomType() {
+        roomTypeDAOImpl.comboBoxRoomType();
+        jComboBoxRoomType.removeAllItems();
+        for (ComboBoxList a : roomTypeDAOImpl.getList()) {
+            this.jComboBoxRoomType.addItem(a);
+        }
+    }
+
+    private void comboBoxRoomStatus() {
+        roomStatusDAOImpl.comboBoxRoomStatus();
+        jComboBoxRoomStatus.removeAllItems();
+        for (ComboBoxList a : roomStatusDAOImpl.getList()) {
+            this.jComboBoxRoomStatus.addItem(a);
+        }
+    }
+
+    private void comboBoxStorey() {
+        storeyDAOImpl.comboBoxStorey();
+        jComboBoxStorey.removeAllItems();
+        for (ComboBoxList a : storeyDAOImpl.getList()) {
+            this.jComboBoxStorey.addItem(a);
+        }
+    }
+
+    private File pictureFile = null;
+
+    private void browse() {
+        try {
+            int returnVal = jFileChooser1.showOpenDialog(this);
+            if (returnVal == javax.swing.JFileChooser.APPROVE_OPTION) {
+                pictureFile = jFileChooser1.getSelectedFile();
+                uploadPhoto(pictureFile);
+                int IMG_WIDTH = jLabelPicture.getWidth();
+                int IMG_HEIGHT = jLabelPicture.getHeight();
+
+                try {
+                    BufferedImage originalImage = ImageIO.read(pictureFile);
+                    int type = originalImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : originalImage.getType();
+
+                    BufferedImage resizedImage = new BufferedImage(IMG_WIDTH, IMG_HEIGHT, type);
+                    Graphics2D g = resizedImage.createGraphics();
+                    g.drawImage(originalImage, 0, 0, IMG_WIDTH, IMG_HEIGHT, null);
+                    g.dispose();
+                    g.setComposite(AlphaComposite.Src);
+
+                    g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+                            RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+                    g.setRenderingHint(RenderingHints.KEY_RENDERING,
+                            RenderingHints.VALUE_RENDER_QUALITY);
+                    g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                            RenderingHints.VALUE_ANTIALIAS_ON);
+
+                    jLabelPicture.setIcon(new ImageIcon(resizedImage)); //to eliminate .jpeg from picture filename
+                    ImageIO.write(resizedImage, "png", new File(Hrms.class.getProtectionDomain().getCodeSource().getLocation().getPath() + "\\images\\model.jpg"));
+
+                } catch (final IOException ex) {
+
+                }
+
+            } else {
+                File defaultDirectory = new File(System.getProperty("user.home"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void uploadPhoto(File file) {
+        if (file != null) {
+            try (FileInputStream fis = new FileInputStream(file)) {
+                byte[] imageData = new byte[(int) file.length()];
+                fis.read(imageData);
+                room.setPhoto(imageData);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    int IMG_WIDTH = 200;
+    int IMG_HEIGHT = 180;
+
+    private void displayRoom(Room room) {
+        try {
+            byte[] imageData = room.getPhoto();
+            ImageIcon imageIcon = new ImageIcon(imageData);
+
+            Image image = imageIcon.getImage();
+            int type = BufferedImage.TYPE_INT_ARGB;
+
+            BufferedImage resizedImage = new BufferedImage(IMG_WIDTH, IMG_HEIGHT, type);
+            Graphics2D g = resizedImage.createGraphics();
+            g.drawImage(image, 0, 0, IMG_WIDTH, IMG_HEIGHT, null);
+            g.dispose();
+            g.setComposite(AlphaComposite.Src);
+
+            g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+                    RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+            g.setRenderingHint(RenderingHints.KEY_RENDERING,
+                    RenderingHints.VALUE_RENDER_QUALITY);
+            g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                    RenderingHints.VALUE_ANTIALIAS_ON);
+
+            jLabelPicture.setIcon(new ImageIcon(resizedImage));//image to label
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void validatePhoto() throws URISyntaxException {
+        if (room.getPhoto() == null) {
+            File targetClassesDir = new File(Hrms.class.getProtectionDomain().getCodeSource().getLocation().getPath() + "\\images\\no photo.jpg");
+            try {
+                FileInputStream fis = new FileInputStream(targetClassesDir);
+                byte[] imageData = new byte[(int) targetClassesDir.length()];
+                fis.read(imageData);
+                room.setPhoto(imageData);
+            } catch (Exception e) {
+                System.out.println("default of no photo is error");
+            }
+        }
+    }
+
+}

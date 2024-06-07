@@ -1,0 +1,195 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.aldrin.hrms.dao.impl;
+
+import com.aldrin.hrms.dao.PaymentDAO;
+import static com.aldrin.hrms.dao.impl.DBConnection.closeConnection;
+import static com.aldrin.hrms.dao.impl.DBConnection.getCon;
+import com.aldrin.hrms.model.Bill;
+import com.aldrin.hrms.model.Booking;
+import com.aldrin.hrms.model.Customer;
+import com.aldrin.hrms.model.Duration;
+import com.aldrin.hrms.model.Payment;
+import com.aldrin.hrms.model.Room;
+import com.aldrin.hrms.model.RoomRate;
+import com.aldrin.hrms.model.RoomStatus;
+import com.aldrin.hrms.model.RoomType;
+import com.aldrin.hrms.model.Storey;
+import com.aldrin.hrms.util.ComboBoxList;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ *
+ * @author ALDRIN B. C.
+ */
+@Setter
+@Getter
+public class PaymentDAOImpl extends DBConnection implements PaymentDAO {
+
+    @Override
+    public void addPayment(Payment payment) {
+        try {
+            getDBConn();
+            java.sql.PreparedStatement ps = getCon().prepareStatement("""
+INSERT INTO `payment` (
+  `user_id`,
+  `bill_id`,
+   `amount`
+) VALUES(?,?,?) ;
+                                                                      """);
+            ps.setLong(1, payment.getUser().getId());
+            ps.setLong(2, payment.getBill().getId());
+            ps.setFloat(3, payment.getAmount());
+            ps.execute();
+            ps.close();
+            closeConnection();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void updatePayment(Payment payment) {
+        try {
+            getDBConn();
+            java.sql.PreparedStatement ps = getCon().prepareStatement("""
+UPDATE 
+   `payment` 
+SET  
+  `user_id` = ?,
+  `bill_id` = ?,
+   `amount` = ? 
+WHERE `id` = ?;
+                                                                      """);
+            ps.setLong(1, payment.getUser().getId());
+            ps.setLong(2, payment.getBill().getId());
+            ps.setFloat(3, payment.getAmount());
+            ps.setLong(4, payment.getId());
+            ps.execute();
+            ps.close();
+            closeConnection();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void deletePayment(Payment customer) {
+        try {
+            getDBConn();
+            java.sql.PreparedStatement ps = getCon().prepareStatement("""
+                                                                      UPDATE 
+                                                                        `customer`
+                                                                      SET
+                                                                        `deleted` = CURRENT_TIMESTAMP()
+                                                                      WHERE `id` = ? ;
+                                                                      """);
+            ps.setLong(1, customer.getId());
+            ps.execute();
+            ps.close();
+            closeConnection();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public ArrayList<ComboBoxList> list;
+
+    @Override
+    public Payment selectRoomBookingPayments(Long roomId) {
+        Payment list = new Payment();
+        try {
+            String query = "SELECT\n"
+                    + "    `room`.`room_number`\n"
+                    + "    , `duration`.`duration`\n"
+                    + "    , `room_rate`.`price`\n"
+                    + "    , `room_rate`.`down_payment`\n"
+                    + "    , `room_rate`.`refundable`\n"
+                    + "    , `booking`.`check_in_date`\n"
+                    + "    , `booking`.`check_out_date`\n"
+                    + "    , `payment`.`amount`\n"
+                    + "    , (`room_rate`.`price`-SUM(`payment`.`amount`)) AS insufficient \n"
+                    + "    , `booking`.`created_at` \n"
+                    + "    , `customer`.`name`\n"
+                    + "FROM\n"
+                    + "    `hrms`.`room_rate`\n"
+                    + "    INNER JOIN `hrms`.`room` \n"
+                    + "        ON (`room_rate`.`room_id` = `room`.`id`)\n"
+                    + "    INNER JOIN `hrms`.`duration` \n"
+                    + "        ON (`room_rate`.`duration_id` = `duration`.`id`)\n"
+                    + "    INNER JOIN `hrms`.`booking` \n"
+                    + "        ON (`booking`.`room_rate_id` = `room_rate`.`id`)\n"
+                    + "    INNER JOIN `hrms`.`bill` \n"
+                    + "        ON (`booking`.`bill_id` = `bill`.`id`)\n"
+                    + "    INNER JOIN `hrms`.`payment` \n"
+                    + "        ON (`payment`.`bill_id` = `bill`.`id`)\n"
+                    + "    INNER JOIN `hrms`.`customer` \n"
+                    + "        ON (`bill`.`customer_id` = `customer`.`id`) WHERE  `booking`.`check_out_date`< CURRENT_TIMESTAMP()  AND `room`.`id` ="+roomId+"\n"
+                    + "        \n"
+                    + "    GROUP BY      `room`.`room_number`\n"
+                    + "    , `duration`.`duration`\n"
+                    + "    , `room_rate`.`price`\n"
+                    + "    , `room_rate`.`down_payment`\n"
+                    + "    , `room_rate`.`refundable`\n"
+                    + "    , `booking`.`check_in_date`\n"
+                    + "    , `booking`.`check_out_date`\n"
+                    + "    , `payment`.`amount` \n"
+                    + "    , `booking`.`created_at` \n"
+                    + "    , `customer`.`name` ";
+            getDBConn();
+            Statement st = getCon().createStatement();
+            ResultSet rs = st.executeQuery(query);
+            while (rs.next()) {
+                Payment payment = new Payment();
+                Duration duration = new Duration();
+                RoomRate roomRate = new RoomRate();
+                Booking booking = new Booking();
+                Customer customer = new Customer();
+                RoomStatus roomStatus = new RoomStatus();
+                Storey storey = new Storey();
+                RoomType roomType = new RoomType();
+                Bill bill = new Bill();
+                Room room = new Room();
+                duration.setDuration(rs.getString("DURATION"));
+                roomRate.setPrice(rs.getFloat("PRICE"));
+                roomRate.setDown_payment(rs.getFloat("DOWN_PAYMENT"));
+                roomRate.setRefundable(rs.getFloat("REFUNDABLE"));
+                booking.setCheckInDate(rs.getDate("CHECK_IN_DATE"));
+                booking.setCheckOutDate(rs.getDate("CHECK_OUT_DATE"));
+                payment.setAmount(rs.getFloat("AMOUNT"));
+                booking.setCreatedAt(rs.getDate("CREATED_AT"));
+                customer.setName(rs.getString("NAME"));
+//                roomStatus.setStatus(rs.getString("STATUS"));
+//                storey.setStorey(rs.getString("STOREY"));
+//                roomType.setType(rs.getString("TYPE"));
+
+                room.setRoomStatus(roomStatus);
+                room.setRoomType(roomType);
+                room.setStorey(storey);
+                roomRate.setRoom(room);
+                roomRate.setDuration(duration);
+                booking.setRoomRate(roomRate);
+                bill.setCustomer(customer);
+                booking.setBill(bill);
+                payment.setBill(bill);
+
+                list = payment;
+
+            }
+            rs.close();
+            st.close();
+            closeConnection();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return list;
+    }
+
+}
