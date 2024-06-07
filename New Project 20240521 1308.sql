@@ -1,7 +1,7 @@
 -- MySQL Administrator dump 1.4
 --
 -- ------------------------------------------------------
--- Server version	8.0.36
+-- Server version	8.0.37
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -28,26 +28,29 @@ USE hrms;
 DROP TABLE IF EXISTS `bill`;
 CREATE TABLE `bill` (
   `id` bigint NOT NULL AUTO_INCREMENT,
-  `deleted` timestamp NULL DEFAULT NULL,
-  `total` float DEFAULT NULL,
   `customer_id` bigint DEFAULT NULL,
-  `user_id` bigint DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `total_downpayment` float DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FKcdveik90g4pvk7m249scu73pg` (`customer_id`),
-  KEY `FKqhq5aolak9ku5x5mx11cpjad9` (`user_id`),
-  CONSTRAINT `FKcdveik90g4pvk7m249scu73pg` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`id`),
-  CONSTRAINT `FKqhq5aolak9ku5x5mx11cpjad9` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `FKcdveik90g4pvk7m249scu73pg` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `bill`
 --
 
 /*!40000 ALTER TABLE `bill` DISABLE KEYS */;
-INSERT INTO `bill` (`id`,`deleted`,`total`,`customer_id`,`user_id`,`created_at`,`total_downpayment`) VALUES 
- (2,NULL,250,1,1,'2024-05-21 07:17:23',300);
+INSERT INTO `bill` (`id`,`customer_id`) VALUES 
+ (2,1),
+ (3,1),
+ (4,1),
+ (5,1),
+ (6,1),
+ (7,1),
+ (8,1),
+ (9,1),
+ (10,1),
+ (11,1),
+ (12,1);
 /*!40000 ALTER TABLE `bill` ENABLE KEYS */;
 
 
@@ -61,24 +64,29 @@ CREATE TABLE `booking` (
   `check_in_date` timestamp NULL DEFAULT NULL,
   `check_out_date` timestamp NULL DEFAULT NULL,
   `reserve` timestamp NULL DEFAULT NULL,
-  `bill_id` bigint DEFAULT NULL,
   `room_rate_id` bigint DEFAULT NULL,
-  `price` float DEFAULT NULL,
-  `downpayment` float DEFAULT NULL,
+  `refund` timestamp NULL DEFAULT NULL,
+  `bill_id` bigint DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  KEY `FKgi35fflyy8jm388q42yn93hu8` (`bill_id`),
   KEY `FK1ereyi0ragw1d9l0ewaxv0aqe` (`room_rate_id`),
+  KEY `FKgi35fflyy8jm388q42yn93hu8` (`bill_id`),
   CONSTRAINT `FK1ereyi0ragw1d9l0ewaxv0aqe` FOREIGN KEY (`room_rate_id`) REFERENCES `room_rate` (`id`),
   CONSTRAINT `FKgi35fflyy8jm388q42yn93hu8` FOREIGN KEY (`bill_id`) REFERENCES `bill` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `booking`
 --
 
 /*!40000 ALTER TABLE `booking` DISABLE KEYS */;
-INSERT INTO `booking` (`id`,`check_in_date`,`check_out_date`,`reserve`,`bill_id`,`room_rate_id`,`price`,`downpayment`) VALUES 
- (1,'2024-05-23 07:18:12','2024-05-23 07:18:03','2024-05-22 07:17:54',2,2,300,250);
+INSERT INTO `booking` (`id`,`check_in_date`,`check_out_date`,`reserve`,`room_rate_id`,`refund`,`bill_id`,`created_at`) VALUES 
+ (4,'2024-05-30 05:24:00','2024-05-30 08:24:00',NULL,1,NULL,7,'2024-05-30 16:31:11'),
+ (5,'2024-05-30 05:36:00','2024-05-30 05:36:00','2024-05-30 16:36:57',4,NULL,8,'2024-05-30 16:36:57'),
+ (6,'2024-05-31 09:54:00','2024-05-31 09:54:00','2024-05-31 09:54:38',4,NULL,9,'2024-05-31 09:54:38'),
+ (7,'2024-06-03 10:37:00','2024-06-03 12:37:00',NULL,1,NULL,10,'2024-06-03 10:37:49'),
+ (8,'2024-06-03 02:08:00','2024-06-04 02:08:00',NULL,2,NULL,11,'2024-06-03 13:08:23'),
+ (9,'2024-06-27 19:57:00','2024-06-28 19:57:00','2024-06-03 19:58:32',2,NULL,12,'2024-06-03 19:58:32');
 /*!40000 ALTER TABLE `booking` ENABLE KEYS */;
 
 
@@ -95,7 +103,7 @@ CREATE TABLE `customer` (
   `name` varchar(255) DEFAULT NULL,
   `phone` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `customer`
@@ -103,7 +111,8 @@ CREATE TABLE `customer` (
 
 /*!40000 ALTER TABLE `customer` DISABLE KEYS */;
 INSERT INTO `customer` (`id`,`address`,`deleted`,`email`,`name`,`phone`) VALUES 
- (1,'SALAY',NULL,'ALDRINCABUSOG@GMAIL,COM','ALDRIN CABUSOG','0938881883');
+ (1,'SALAY',NULL,'ALDRINCABUSOG@GMAIL,COM','ALDRIN CABUSOG','0938881883'),
+ (2,'SALAY',NULL,'JIMMANDANG@GMAIL.COM','JIM MANDANG','09473627463');
 /*!40000 ALTER TABLE `customer` ENABLE KEYS */;
 
 
@@ -145,22 +154,31 @@ DROP TABLE IF EXISTS `payment`;
 CREATE TABLE `payment` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `amount` float DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
   `deleted` timestamp NULL DEFAULT NULL,
   `method` varchar(255) DEFAULT NULL,
+  `user_id` bigint DEFAULT NULL,
   `bill_id` bigint DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
+  KEY `FK4spfnm9si9dowsatcqs5or42i` (`user_id`),
   KEY `FKhdc173udjyonn4mt1lgt1x2ce` (`bill_id`),
+  CONSTRAINT `FK4spfnm9si9dowsatcqs5or42i` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
   CONSTRAINT `FKhdc173udjyonn4mt1lgt1x2ce` FOREIGN KEY (`bill_id`) REFERENCES `bill` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `payment`
 --
 
 /*!40000 ALTER TABLE `payment` DISABLE KEYS */;
-INSERT INTO `payment` (`id`,`amount`,`created_at`,`deleted`,`method`,`bill_id`) VALUES 
- (2,800,NULL,NULL,NULL,2);
+INSERT INTO `payment` (`id`,`amount`,`deleted`,`method`,`user_id`,`bill_id`,`created_at`) VALUES 
+ (2,800,NULL,NULL,NULL,NULL,'2024-05-30 16:34:38'),
+ (8,250,NULL,NULL,1,7,'2024-05-30 16:34:38'),
+ (9,400,NULL,NULL,1,8,'2024-05-30 16:36:57'),
+ (10,600,NULL,NULL,1,9,'2024-05-31 09:54:38'),
+ (11,250,NULL,NULL,1,10,'2024-06-03 10:37:49'),
+ (12,1500,NULL,NULL,1,11,'2024-06-03 13:08:23'),
+ (13,800,NULL,NULL,1,12,'2024-06-03 19:58:32');
 /*!40000 ALTER TABLE `payment` ENABLE KEYS */;
 
 
@@ -234,22 +252,24 @@ CREATE TABLE `room_rate` (
   `room_id` bigint DEFAULT NULL,
   `duration_id` bigint DEFAULT NULL,
   `down_payment` float DEFAULT NULL,
+  `refundable` float DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FKsw0yul8g6og45ngci0t3250oi` (`room_id`),
   KEY `FKorag847gps9wkea4y0by6vg01` (`duration_id`),
   CONSTRAINT `FKorag847gps9wkea4y0by6vg01` FOREIGN KEY (`duration_id`) REFERENCES `duration` (`id`),
   CONSTRAINT `FKsw0yul8g6og45ngci0t3250oi` FOREIGN KEY (`room_id`) REFERENCES `room` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `room_rate`
 --
 
 /*!40000 ALTER TABLE `room_rate` DISABLE KEYS */;
-INSERT INTO `room_rate` (`id`,`in_active`,`price`,`room_id`,`duration_id`,`down_payment`) VALUES 
- (1,NULL,250,1,1,250),
- (2,NULL,1500,1,4,800),
- (3,NULL,350,2,2,200);
+INSERT INTO `room_rate` (`id`,`in_active`,`price`,`room_id`,`duration_id`,`down_payment`,`refundable`) VALUES 
+ (1,NULL,250,1,1,250,150),
+ (2,NULL,1500,1,4,800,NULL),
+ (3,NULL,350,2,2,200,NULL),
+ (4,NULL,600,2,3,400,200);
 /*!40000 ALTER TABLE `room_rate` ENABLE KEYS */;
 
 
