@@ -5,6 +5,7 @@
 package com.aldrin.hrms.dao;
 
 import com.aldrin.hrms.model.Payment;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,6 +24,9 @@ public interface PaymentDAO {
     public void deletePayment(Payment payment);
 
     public Payment selectRoomBookingPayments(Long roomId);
+
+    public void comboBoxInvoiceId();
     
+    public ArrayList<Payment> selectUserReceiveAmount(Long userId, Long from,Long to);
 
 }

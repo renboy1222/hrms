@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.6.final using JasperReports Library version 6.20.6-5c96b6aa8a39ac1dc6b6bea4b81168e16dd39231  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="userSales" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="13acf49e-4913-4d1b-bccc-113817ad15d1">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="hrms"/>
+	<style name="Title" forecolor="#FFFFFF" fontName="Times New Roman" fontSize="50" isBold="false"/>
+	<style name="SubTitle" forecolor="#CCCCCC" fontName="Times New Roman" fontSize="18" isBold="false"/>
+	<style name="Column header" forecolor="#666666" fontName="Times New Roman" fontSize="14" isBold="true"/>
+	<style name="Detail" mode="Transparent" fontName="Times New Roman"/>
+	<style name="Row" mode="Transparent" backcolor="#D9D9D9" fontName="Times New Roman" pdfFontName="Times-Roman">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style mode="Opaque" backcolor="#F0EFEF"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="USERID" class="java.lang.Long"/>
+	<parameter name="FROMID" class="java.lang.Long"/>
+	<parameter name="TOID" class="java.lang.Long"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT
+    `user`.`firstname` 
+    , `user`.`photo`
+    ,  `user`.`username`
+    , `user`.`surname`
+    , `customer`.`name`
+    , `payment`.`id`
+    , `payment`.`created_at`
+    , `payment`.`amount`
+    , `booking`.`reserve`
+    , `role`.`role`
+    , `room`.`room_number`
+FROM
+    `hrms`.`payment`
+    INNER JOIN `hrms`.`user` 
+        ON (`payment`.`user_id` = `user`.`id`)
+    INNER JOIN `hrms`.`bill` 
+        ON (`payment`.`bill_id` = `bill`.`id`)
+    INNER JOIN `hrms`.`customer` 
+        ON (`bill`.`customer_id` = `customer`.`id`)
+    INNER JOIN `hrms`.`booking` 
+        ON (`booking`.`bill_id` = `bill`.`id`)
+    INNER JOIN `hrms`.`role` 
+        ON (`user`.`role_id` = `role`.`id`)
+    INNER JOIN `hrms`.`room_rate` 
+        ON (`booking`.`room_rate_id` = `room_rate`.`id`)
+    INNER JOIN `hrms`.`room` 
+        ON (`room_rate`.`room_id` = `room`.`id`)
+        WHERE `user`.`id` =$P{USERID} AND `payment`.`id` >=$P{FROMID} AND `payment`.`id` <=$P{TOID} ORDER BY `payment`.`id` ASC   ]]>
+	</queryString>
+	<field name="firstname" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="firstname"/>
+		<property name="com.jaspersoft.studio.field.label" value="firstname"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="user"/>
+	</field>
+	<field name="surname" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="surname"/>
+		<property name="com.jaspersoft.studio.field.label" value="surname"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="user"/>
+	</field>
+	<field name="name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="name"/>
+		<property name="com.jaspersoft.studio.field.label" value="name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="customer"/>
+	</field>
+	<field name="id" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="id"/>
+		<property name="com.jaspersoft.studio.field.label" value="id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="payment"/>
+	</field>
+	<field name="created_at" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="created_at"/>
+		<property name="com.jaspersoft.studio.field.label" value="created_at"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="payment"/>
+	</field>
+	<field name="amount" class="java.lang.Float">
+		<property name="com.jaspersoft.studio.field.name" value="amount"/>
+		<property name="com.jaspersoft.studio.field.label" value="amount"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="payment"/>
+	</field>
+	<field name="reserve" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="reserve"/>
+		<property name="com.jaspersoft.studio.field.label" value="reserve"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="booking"/>
+	</field>
+	<field name="role" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="role"/>
+		<property name="com.jaspersoft.studio.field.label" value="role"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="role"/>
+	</field>
+	<field name="room_number" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="room_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="room_number"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="room"/>
+	</field>
+	<field name="photo" class="java.io.InputStream"/>
+	<field name="username" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="342" splitType="Stretch">
+			<frame>
+				<reportElement mode="Opaque" x="0" y="1" width="555" height="62" backcolor="#FFFFFF" uuid="6c6ca4e1-17cd-4913-93d6-5e670ea9ae8a"/>
+				<staticText>
+					<reportElement style="Title" x="0" y="0" width="555" height="30" forecolor="#2595BA" uuid="a2a2cac8-5a7d-4487-8c54-dab235ce4e21"/>
+					<textElement textAlignment="Center">
+						<font fontName="Arial Narrow" size="18" isBold="false"/>
+					</textElement>
+					<text><![CDATA[HOTEL ROOM MANAGEMENT SYSTEM]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="SubTitle" x="0" y="19" width="554" height="29" uuid="8978eac3-c578-41c9-837e-48d2b0184642"/>
+					<textElement textAlignment="Center">
+						<font fontName="Arial Narrow" size="22" isBold="false"/>
+					</textElement>
+					<text><![CDATA[USER SALES REPORT]]></text>
+				</staticText>
+				<textField pattern="EEEEE dd MMMMM yyyy">
+					<reportElement x="2" y="42" width="552" height="20" forecolor="#524545" uuid="5c3301e7-a737-4c59-8a2f-a6c79fd1adb8"/>
+					<textElement textAlignment="Center">
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+			</frame>
+			<image>
+				<reportElement x="18" y="67" width="60" height="60" uuid="9fbee493-cae8-4c2e-af30-a910e20ddd66">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.25"/>
+				</box>
+				<imageExpression><![CDATA[$F{photo}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="80" y="71" width="56" height="20" uuid="bb1f6bb0-bb05-4c1a-b6a2-8c3e9dbf9ab3"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<text><![CDATA[USER:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="135" y="72" width="155" height="20" uuid="6399f97c-fb58-44f6-bd6a-471e8c1b463c"/>
+				<textElement verticalAlignment="Middle">
+					<font isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{surname}+", "+$F{firstname}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="80" y="92" width="56" height="20" uuid="0891d6a3-879e-4d0f-a40f-8c216a7bb571"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<text><![CDATA[ACCOUNT:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="135" y="92" width="150" height="20" uuid="72a29ade-1a01-40f2-a35d-0eed54230122"/>
+				<textElement verticalAlignment="Middle">
+					<font isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{username}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="81" y="112" width="56" height="20" uuid="5a272319-2453-4dd5-8bfe-72cbf74427fe"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<text><![CDATA[ROLE:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="136" y="112" width="150" height="20" uuid="2f0181f5-2a69-4481-b83e-645797417cb8"/>
+				<textElement verticalAlignment="Middle">
+					<font isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{role}]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement x="0" y="132" width="555" height="198" uuid="6c94b53e-9052-4fcc-8079-3126cebebc19"/>
+				<subreportParameter name="USERID">
+					<subreportParameterExpression><![CDATA[$P{USERID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="FROMID">
+					<subreportParameterExpression><![CDATA[$P{FROMID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="TOID">
+					<subreportParameterExpression><![CDATA[$P{TOID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["userSalesDetails.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="8" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="4" splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band height="7" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="3" width="555" height="1" uuid="1133a906-5b71-476e-9f3e-bc97c97058c1"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="25" splitType="Stretch">
+			<frame>
+				<reportElement mode="Opaque" x="0" y="1" width="555" height="24" forecolor="#D0B48E" backcolor="#000000" uuid="729c3539-f946-4d0e-a0a7-bda2815ea1b0"/>
+				<textField evaluationTime="Report">
+					<reportElement style="Column header" x="513" y="0" width="40" height="20" forecolor="#FFFFFF" uuid="4834e99c-7f6c-485a-b098-50e5187f2ab4"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="Column header" x="433" y="0" width="80" height="20" forecolor="#FFFFFF" uuid="9825b46e-76f1-469a-abb8-a1cc27aad685"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+				</textField>
+				<textField pattern="EEEEE dd MMMMM yyyy">
+					<reportElement style="Column header" x="2" y="1" width="197" height="20" forecolor="#FFFFFF" uuid="137d38c7-1a83-4fc5-b156-9d5f1b1a0ddc"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

@@ -25,5 +25,7 @@ public class Payment {
     private Date deleted;
     private User user;
     private Bill bill;
+    
+    private String createdAtF;
 
 }

@@ -18,10 +18,10 @@ import com.aldrin.hrms.model.RoomStatus;
 import com.aldrin.hrms.model.RoomType;
 import com.aldrin.hrms.model.Storey;
 import com.aldrin.hrms.util.ComboBoxList;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -32,7 +32,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class PaymentDAOImpl extends DBConnection implements PaymentDAO {
-
+    
     @Override
     public void addPayment(Payment payment) {
         try {
@@ -54,7 +54,7 @@ INSERT INTO `payment` (
             e.printStackTrace();
         }
     }
-
+    
     @Override
     public void updatePayment(Payment payment) {
         try {
@@ -79,7 +79,7 @@ WHERE `id` = ?;
             e.printStackTrace();
         }
     }
-
+    
     @Override
     public void deletePayment(Payment customer) {
         try {
@@ -99,9 +99,9 @@ WHERE `id` = ?;
             e.printStackTrace();
         }
     }
-
+    
     public ArrayList<ComboBoxList> list;
-
+    
     @Override
     public Payment selectRoomBookingPayments(Long roomId) {
         Payment list = new Payment();
@@ -131,7 +131,7 @@ WHERE `id` = ?;
                     + "    INNER JOIN `hrms`.`payment` \n"
                     + "        ON (`payment`.`bill_id` = `bill`.`id`)\n"
                     + "    INNER JOIN `hrms`.`customer` \n"
-                    + "        ON (`bill`.`customer_id` = `customer`.`id`) WHERE  `booking`.`check_out_date`< CURRENT_TIMESTAMP()  AND `room`.`id` ="+roomId+"\n"
+                    + "        ON (`bill`.`customer_id` = `customer`.`id`) WHERE  `booking`.`check_out_date`< CURRENT_TIMESTAMP()  AND `room`.`id` =" + roomId + "\n"
                     + "        \n"
                     + "    GROUP BY      `room`.`room_number`\n"
                     + "    , `duration`.`duration`\n"
@@ -179,9 +179,9 @@ WHERE `id` = ?;
                 bill.setCustomer(customer);
                 booking.setBill(bill);
                 payment.setBill(bill);
-
+                
                 list = payment;
-
+                
             }
             rs.close();
             st.close();
@@ -191,5 +191,81 @@ WHERE `id` = ?;
         }
         return list;
     }
-
+    
+    @Override
+    public void comboBoxInvoiceId() {
+        this.setList(new ArrayList<ComboBoxList>());
+        try {
+            getDBConn();
+            PreparedStatement statement;
+            ResultSet rs;
+            statement = getCon().prepareStatement("SELECT \n"
+                    + "  `id`,\n"
+                    + "  `created_at`,DATE_FORMAT(`created_at`, '%b %d,%Y %h:%i:%p') AS createAT \n"
+                    + "FROM\n"
+                    + "  `hrms`.`payment` ORDER BY id DESC ;");
+            rs = statement.executeQuery();
+            while (rs.next()) {
+                Long idl = rs.getLong("ID");
+                String createdAT = rs.getString("createAT");
+                this.getList().add(new ComboBoxList(idl, idl + "    [" + createdAT + "]"));
+            }
+            rs.close();
+            statement.close();
+            closeConnection();
+            
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    @Override
+    public ArrayList<Payment> selectUserReceiveAmount(Long userId, Long from, Long to) {
+        ArrayList<Payment> list = new ArrayList<>();
+        try {
+            String query = """
+                           SELECT
+                               `user`.`firstname`
+                               , `user`.`surname`
+                               , `customer`.`name`
+                               , `payment`.`id`
+                               , `payment`.`created_at`
+                               , `payment`.`amount`
+                           FROM
+                               `hrms`.`payment`
+                               INNER JOIN `hrms`.`user` 
+                                   ON (`payment`.`user_id` = `user`.`id`)
+                               INNER JOIN `hrms`.`bill` 
+                                   ON (`payment`.`bill_id` = `bill`.`id`)
+                               INNER JOIN `hrms`.`customer` 
+                                   ON (`bill`.`customer_id` = `customer`.`id`)
+                               INNER JOIN `hrms`.`booking` 
+                                   ON (`booking`.`bill_id` = `bill`.`id`)
+                           """ + " WHERE `user`.`id` =" + userId + " AND `payment`.`id` >=" + from + " AND `payment`.`id` <=" + to + "  ORDER BY `payment`.`id` ASC  ";
+            getDBConn();
+            Statement st = getCon().createStatement();
+            ResultSet rs = st.executeQuery(query);
+            
+            while (rs.next()) {
+                Payment p = new Payment();
+                Bill bill = new Bill();
+                Customer customer = new Customer();
+                p.setId(rs.getLong("ID"));
+                customer.setName(rs.getString("NAME"));
+                bill.setCustomer(customer);
+                p.setCreatedAtF(rs.getString("CREATED_AT"));
+                p.setAmount(rs.getFloat("AMOUNT"));
+                p.setBill(bill);
+                
+                list.add(p);
+            }
+            rs.close();
+            st.close();
+            closeConnection();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return list;
+    }
+    
 }

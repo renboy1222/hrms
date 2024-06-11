@@ -58,7 +58,7 @@ public class JFrameHRMS extends javax.swing.JFrame implements MouseListener {
      * Creates new form JFrameHRMS
      */
     private DecimalFormat df = new DecimalFormat("##,##0.00");
-
+    
     public JFrameHRMS() {
         initComponents();
         FlatLaf.updateUI();
@@ -97,6 +97,8 @@ public class JFrameHRMS extends javax.swing.JFrame implements MouseListener {
         jPanel2 = new javax.swing.JPanel();
         jToolBar1 = new javax.swing.JToolBar();
         jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
         jPanel13 = new javax.swing.JPanel();
         jPanel14 = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
@@ -249,6 +251,38 @@ public class JFrameHRMS extends javax.swing.JFrame implements MouseListener {
             }
         });
         jToolBar1.add(jButton1);
+
+        jButton2.setIcon(new FlatSVGIcon("svg/booking.svg",40,40));
+        jButton2.setToolTipText("User sales");
+        jButton2.setFocusable(false);
+        jButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton2.setMargin(new java.awt.Insets(2, 2, 2, 2));
+        jButton2.setMaximumSize(new java.awt.Dimension(42, 42));
+        jButton2.setMinimumSize(new java.awt.Dimension(42, 42));
+        jButton2.setPreferredSize(new java.awt.Dimension(42, 42));
+        jButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jButton2);
+
+        jButton3.setIcon(new FlatSVGIcon("svg/booking.svg",40,40));
+        jButton3.setToolTipText("User sales report");
+        jButton3.setFocusable(false);
+        jButton3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton3.setMargin(new java.awt.Insets(2, 2, 2, 2));
+        jButton3.setMaximumSize(new java.awt.Dimension(42, 42));
+        jButton3.setMinimumSize(new java.awt.Dimension(42, 42));
+        jButton3.setPreferredSize(new java.awt.Dimension(42, 42));
+        jButton3.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jButton3);
 
         jPanel2.add(jToolBar1, java.awt.BorderLayout.CENTER);
 
@@ -420,9 +454,21 @@ public class JFrameHRMS extends javax.swing.JFrame implements MouseListener {
         }
     }//GEN-LAST:event_jTextFieldSearchKeyReleased
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        JDialogCashReceive cashReceive = new JDialogCashReceive(this, true);
+        cashReceive.setVisible(true);
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        JDialogUserSalesReport userReport = new JDialogUserSalesReport(this, true);
+        userReport.setVisible(true);
+    }//GEN-LAST:event_jButton3ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
@@ -495,19 +541,19 @@ public class JFrameHRMS extends javax.swing.JFrame implements MouseListener {
                     return String.class;
             }
         }
-
+        
         public boolean isCellEditable(int row, int col) {
             if (col < 10) {
                 return false;
-
+                
             } else {
                 return true;
             }
         }
-
+        
     };
     private TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(tableModel);
-
+    
     private void setTable() {
         jTable1 = new JTable(tableModel) {
             @Override
@@ -518,16 +564,16 @@ public class JFrameHRMS extends javax.swing.JFrame implements MouseListener {
                 } else {
                     component.setBackground(row % 2 == 0 ? getBackground() : Color.decode("#F5F5F5")); // Alternate row color
                 }
-
+                
                 return component;
             }
-
+            
             protected JTableHeader createDefaultTableHeader() {
                 return new GroupableTableHeader(columnModel);
             }
-
+            
         };
-
+        
         TableColumnModel cm = jTable1.getColumnModel();
         ColumnGroup g_lang = new ColumnGroup("ROOM INFORMATION");
         g_lang.add(cm.getColumn(3));
@@ -550,7 +596,7 @@ public class JFrameHRMS extends javax.swing.JFrame implements MouseListener {
         g_name.add(cm.getColumn(17));
         g_name.add(cm.getColumn(18));
         g_name.add(cm.getColumn(19));
-
+        
         GroupableTableHeader header = (GroupableTableHeader) jTable1.getTableHeader();
         header.addColumnGroup(g_name);
         header.addColumnGroup(g_lang);
@@ -558,9 +604,9 @@ public class JFrameHRMS extends javax.swing.JFrame implements MouseListener {
         header.setBackground(new java.awt.Color(204, 204, 204));
         jTable1.setRowSorter(sorter);
         jTable1.addMouseListener(this);
-
+        
         jTable1.setDefaultRenderer(Object.class, new JFrameHRMS.CustomTableCellRenderer());
-
+        
         jScrollPane1.setViewportView(jTable1);
         TableColumn hide0 = jTable1.getColumnModel().getColumn(0);
         hide0.setMinWidth(0);
@@ -595,53 +641,53 @@ public class JFrameHRMS extends javax.swing.JFrame implements MouseListener {
         TableColumn[] column = new TableColumn[100];
         column[1] = jTable1.getColumnModel().getColumn(1);
         column[1].setPreferredWidth(30);
-
+        
         column[2] = jTable1.getColumnModel().getColumn(2);
         column[2].setPreferredWidth(30);
-
+        
         column[3] = jTable1.getColumnModel().getColumn(3);
         column[3].setPreferredWidth(30);
-
+        
         column[4] = jTable1.getColumnModel().getColumn(4);
         column[4].setPreferredWidth(30);
-
+        
         column[5] = jTable1.getColumnModel().getColumn(5);
         column[5].setPreferredWidth(30);
-
+        
         column[6] = jTable1.getColumnModel().getColumn(6);
         column[6].setPreferredWidth(40);
-
+        
         column[7] = jTable1.getColumnModel().getColumn(7);
         column[7].setPreferredWidth(30);
-
+        
         column[8] = jTable1.getColumnModel().getColumn(8);
         column[8].setPreferredWidth(40);
-
+        
         column[9] = jTable1.getColumnModel().getColumn(9);
-        column[9].setPreferredWidth(60);
-
+        column[9].setPreferredWidth(40);
+        
         column[10] = jTable1.getColumnModel().getColumn(10);
         column[10].setPreferredWidth(80);
-
+        
         column[11] = jTable1.getColumnModel().getColumn(11);
         column[11].setPreferredWidth(80);
-
+        
         column[14] = jTable1.getColumnModel().getColumn(14);
         column[14].setPreferredWidth(30);
-
+        
         column[16] = jTable1.getColumnModel().getColumn(16);
         column[16].setPreferredWidth(50);
-
+        
         column[17] = jTable1.getColumnModel().getColumn(17);
         column[17].setPreferredWidth(50);
-
+        
         column[19] = jTable1.getColumnModel().getColumn(19);
         column[19].setPreferredWidth(30);
-
+        
     }
-
+    
     static class CustomTableCellRenderer extends DefaultTableCellRenderer {
-
+        
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
                 boolean hasFocus, int row, int column) {
@@ -658,34 +704,35 @@ public class JFrameHRMS extends javax.swing.JFrame implements MouseListener {
             }
             return cell;
         }
-
+        
     }
-
+    
     @Override
     public void mouseClicked(MouseEvent e) {
     }
-
+    
     @Override
     public void mousePressed(MouseEvent e) {
     }
-
+    
     @Override
     public void mouseReleased(MouseEvent e) {
     }
-
+    
     @Override
     public void mouseEntered(MouseEvent e) {
     }
-
+    
     @Override
     public void mouseExited(MouseEvent e) {
     }
-
+    
     private RoomDAOImpl roomDAOImpl = new RoomDAOImpl();
     private PaymentDAOImpl paymentDAOImpl = new PaymentDAOImpl();
     private BookingDAOImpl bookingDAOImpl = new BookingDAOImpl();
     private ArrayList<Room> roomList;
-
+    private ArrayList<Booking> bookingList;
+    
     private void selectRoom() {
         tableModel.setRowCount(0);
         roomList = roomDAOImpl.selectRoom();
@@ -694,32 +741,58 @@ public class JFrameHRMS extends javax.swing.JFrame implements MouseListener {
         for (Room r : roomList) {
 //            "DURATION", "CHECK-IN", "CHECK-OUT", "CHECK-IN UF", "PAID", "DOWN PAYMENT", "INSUFFICIENT", "REFUNDABLE","BILL ID"
             Payment p = paymentDAOImpl.selectRoomBookingPayments(r.getId());
-            Booking b = bookingDAOImpl.selectRoomBookingByRoomId(r.getId());
-            System.out.println("reserve::_"+b.getReserve());
-            if (b.getReserve() != null) {
-                reserve =true;
-            }
-            if (b.getCheckOut() == null) {
+            Booking bo = bookingDAOImpl.selectRoomBookingByRoomId(r.getId());
+//            if (bo.getReserve() != null) {
+//                reserve = true;
+//            }
+            if (bo.getCheckOut() == null) {
                 tableModel.addRow(new Object[]{r.getId(), r.getRoomType().getId(), r.getRoomStatus().getId(), r.getRoomNumber(), df.format(r.getPrice()), r.getPrice(), r.getRoomStatus().getStatus(), r.getRoomType().getType(), r.getRoomType().getCapacity()});
             } else {
-                tableModel.addRow(new Object[]{r.getId(), r.getRoomType().getId(), r.getRoomStatus().getId(), r.getRoomNumber(), df.format(r.getPrice()), r.getPrice(), r.getRoomStatus().getStatus(), r.getRoomType().getType(), r.getRoomType().getCapacity(),
-                    b.getRoomRate().getDuration().getDuration(), new StringToDate().convertStringToFormattedDate(b.getCheckIn()), new StringToDate().convertStringToFormattedDate(b.getCheckOut()), b.getCheckIn(), b.getCheckOut(),//2nd line
-                    df.format(p.getAmount()), df.format(b.getRoomRate().getDown_payment()), df.format((b.getRoomRate().getPrice() - p.getAmount())), df.format(b.getRoomRate().getRefundable()), b.getBill().getId(),reserve});
-
+                ArrayList<Booking> list = bookingDAOImpl.selectRoomBookingListByRoomId(r.getId());
+//                ArrayList<Payment> p = bookingDAOImpl.selectRoomBookingPaymentListByRoomId(r.getId());
+                int count = 1;
+                for (Booking b : list) {
+                    if (b.getReserve() != null) {
+                        reserve = true;
+                    }
+                    if (list.size() > 1) {
+                        if (b.getReserve() != null) {
+                            reserve = true;
+                        }
+                        if (count == 1) {
+                            tableModel.addRow(new Object[]{r.getId(), r.getRoomType().getId(), r.getRoomStatus().getId(), r.getRoomNumber(), df.format(r.getPrice()), r.getPrice(), r.getRoomStatus().getStatus(), r.getRoomType().getType(), r.getRoomType().getCapacity(),
+                                b.getRoomRate().getDuration().getDuration(), new StringToDate().convertStringToFormattedDate(b.getCheckIn()), new StringToDate().convertStringToFormattedDate(b.getCheckOut()), b.getCheckIn(), b.getCheckOut(),//2nd line
+                                df.format(b.getAmount()), df.format(b.getRoomRate().getDown_payment()), df.format((b.getRoomRate().getPrice() - b.getAmount())), df.format(b.getRoomRate().getRefundable()), b.getBill().getId(), reserve});
+                            reserve = false;
+                        } else {
+                            tableModel.addRow(new Object[]{r.getId(), r.getRoomType().getId(), r.getRoomStatus().getId(), "", "", "", "", "", "",
+                                b.getRoomRate().getDuration().getDuration(), new StringToDate().convertStringToFormattedDate(b.getCheckIn()), new StringToDate().convertStringToFormattedDate(b.getCheckOut()), b.getCheckIn(), b.getCheckOut(),//2nd line
+                                df.format(b.getAmount()), df.format(b.getRoomRate().getDown_payment()), df.format((b.getRoomRate().getPrice() - b.getAmount())), df.format(b.getRoomRate().getRefundable()), b.getBill().getId(), reserve});
+                            reserve = false;
+                        }
+                        count++;
+                    } else {
+                        tableModel.addRow(new Object[]{r.getId(), r.getRoomType().getId(), r.getRoomStatus().getId(), r.getRoomNumber(), df.format(r.getPrice()), r.getPrice(), r.getRoomStatus().getStatus(), r.getRoomType().getType(), r.getRoomType().getCapacity(),
+                            b.getRoomRate().getDuration().getDuration(), new StringToDate().convertStringToFormattedDate(b.getCheckIn()), new StringToDate().convertStringToFormattedDate(b.getCheckOut()), b.getCheckIn(), b.getCheckOut(),//2nd line
+                            df.format(b.getAmount()), df.format(b.getRoomRate().getDown_payment()), df.format((b.getRoomRate().getPrice() - b.getAmount())), df.format(b.getRoomRate().getRefundable()), b.getBill().getId(), reserve});
+                        reserve = false;
+                    }
+                    reserve = false;
+                }
             }
-
+            
         }
     }
-
+    
     private void popUpMenu() {
         JPopupMenu popupMenu = new JPopupMenu();
-        JMenuItem deleteItem = new JMenuItem("Book");
-        deleteItem.setIcon(new FlatSVGIcon("svg/search.svg", 16, 16));
-        JMenuItem deleteItem1 = new JMenuItem("Reserve");
-        deleteItem1.setIcon(new FlatSVGIcon("svg/search.svg", 16, 16));
-
-        popupMenu.add(deleteItem);
-        popupMenu.add(deleteItem1);
+        JMenuItem refreshItem = new JMenuItem("Refresh");
+        refreshItem.setIcon(new FlatSVGIcon("svg/search.svg", 16, 16));
+        JMenuItem reserveItem = new JMenuItem("Reserve");
+        reserveItem.setIcon(new FlatSVGIcon("svg/search.svg", 16, 16));
+        
+        popupMenu.add(refreshItem);
+        popupMenu.add(reserveItem);
         jTable1.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
@@ -729,7 +802,7 @@ public class JFrameHRMS extends javax.swing.JFrame implements MouseListener {
                 } else {
                     jTable1.clearSelection();
                 }
-
+                
                 int rowindex = jTable1.getSelectedRow();
                 if (rowindex < 0) {
                     return;
@@ -739,13 +812,24 @@ public class JFrameHRMS extends javax.swing.JFrame implements MouseListener {
                 }
             }
         });
-
-        deleteItem.addActionListener(new ActionListener() {
+        
+        refreshItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int selectedRow = jTable1.getSelectedRow();
                 if (selectedRow != -1) {
-                    tableModel.removeRow(selectedRow);
+                    selectRoom();
+                }
+            }
+        });
+        reserveItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedRow = jTable1.getSelectedRow();
+                if (selectedRow != -1) {
+                    JDialogBooking booking = new JDialogBooking(JFrameHRMS.this, true);
+                    booking.setVisible(true);
+                    selectRoom();
                 }
             }
         });

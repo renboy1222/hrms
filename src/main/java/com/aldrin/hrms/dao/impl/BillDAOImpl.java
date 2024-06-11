@@ -5,10 +5,14 @@
 package com.aldrin.hrms.dao.impl;
 
 import com.aldrin.hrms.dao.BillDAO;
+import static com.aldrin.hrms.dao.impl.DBConnection.closeConnection;
+import static com.aldrin.hrms.dao.impl.DBConnection.getCon;
 import com.aldrin.hrms.model.Bill;
+import com.aldrin.hrms.model.Customer;
 import com.aldrin.hrms.util.ComboBoxList;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import lombok.Getter;
 import lombok.Setter;
@@ -112,5 +116,8 @@ WHERE `customer_id` = ?
         }
         return maxId;
     }
+
+//    public ArrayList<ComboBoxList> list;
+
 
 }

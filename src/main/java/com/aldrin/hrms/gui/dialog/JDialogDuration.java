@@ -268,10 +268,6 @@ public class JDialogDuration extends javax.swing.JDialog implements MouseListene
         column[1] = jTableCategory.getColumnModel().getColumn(1);
         column[1].setPreferredWidth(110);
 
-
-
-   
-
     }
 
     private DurationDAOImpl durationDAOImpl = new DurationDAOImpl();

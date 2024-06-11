@@ -33,5 +33,6 @@ public class Booking {
     private String checkIn;
     private String checkOut;
     private Boolean reserved;
+    private Payment payment;
 
 }

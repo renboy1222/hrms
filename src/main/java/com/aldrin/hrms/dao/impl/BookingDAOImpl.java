@@ -372,4 +372,208 @@ WHERE `customer_id` = ?
         return list;
     }
 
+    @Override
+    public ArrayList<Booking> selectRoomBookingListByRoomId(Long roomId) {
+        ArrayList<Booking> list = new ArrayList<Booking>();
+        try {
+            String query = "SELECT\n"
+                    + "    `room`.`room_number`\n"
+                    + "    , `duration`.`duration`\n"
+                    + "    , `room_rate`.`price`\n"
+                    + "    , `room_rate`.`down_payment`\n"
+                    + "    , `room_rate`.`refundable`\n"
+                    + "    , `booking`.`check_in_date`\n"
+                    + "    , `booking`.`check_out_date`\n"
+                    + "    , `payment`.`amount`\n"
+                    + "    , `bill`.`id`\n"
+                    + "    , `room_status`.`status`\n"
+                    + "    , `room_storey`.`storey`\n"
+                    + "    , `room_type`.`type`, `booking`.`reserve`\n"
+                    + "FROM\n"
+                    + "    `hrms`.`room_rate`\n"
+                    + "    INNER JOIN `hrms`.`room` \n"
+                    + "        ON (`room_rate`.`room_id` = `room`.`id`)\n"
+                    + "    INNER JOIN `hrms`.`duration` \n"
+                    + "        ON (`room_rate`.`duration_id` = `duration`.`id`)\n"
+                    + "    INNER JOIN `hrms`.`booking` \n"
+                    + "        ON (`booking`.`room_rate_id` = `room_rate`.`id`)\n"
+                    + "    INNER JOIN `hrms`.`bill` \n"
+                    + "        ON (`booking`.`bill_id` = `bill`.`id`)\n"
+                    + "    INNER JOIN `hrms`.`payment` \n"
+                    + "        ON (`payment`.`bill_id` = `bill`.`id`)\n"
+                    + "    INNER JOIN `hrms`.`customer` \n"
+                    + "        ON (`bill`.`customer_id` = `customer`.`id`)\n"
+                    + "    INNER JOIN `hrms`.`room_storey` \n"
+                    + "        ON (`room`.`storey_id` = `room_storey`.`id`)\n"
+                    + "    INNER JOIN `hrms`.`room_type` \n"
+                    + "        ON (`room`.`type_id` = `room_type`.`id`)\n"
+                    + "    INNER JOIN `hrms`.`room_status` \n"
+                    + "        ON (`room`.`status_id` = `room_status`.`id`)        \n"
+                    + "    WHERE  `booking`.`check_out_date`> CURRENT_TIMESTAMP()  AND `room`.`id` = " + roomId + " \n"
+                    + "    GROUP BY `room`.`room_number`\n"
+                    + "    , `duration`.`duration`\n"
+                    + "    , `room_rate`.`price`\n"
+                    + "    , `room_rate`.`down_payment`\n"
+                    + "    , `room_rate`.`refundable`\n"
+                    + "    , `booking`.`check_in_date`\n"
+                    + "    , `booking`.`check_out_date`\n"
+                    + "    , `payment`.`amount`\n"
+                    + "    , `bill`.`id`\n"
+                    + "    , `room_status`.`status`\n"
+                    + "    , `room_storey`.`storey`\n"
+                    + "    , `room_type`.`type`, `booking`.`reserve` ORDER BY `room`.`room_number` ASC ";
+            getDBConn();
+            Statement st = getCon().createStatement();
+            ResultSet rs = st.executeQuery(query);
+            while (rs.next()) {
+                Payment payment = new Payment();
+                Duration duration = new Duration();
+                RoomRate roomRate = new RoomRate();
+                Booking booking = new Booking();
+                Customer customer = new Customer();
+                RoomStatus roomStatus = new RoomStatus();
+                Storey storey = new Storey();
+                RoomType roomType = new RoomType();
+                Bill bill = new Bill();
+                Room room = new Room();
+                duration.setDuration(rs.getString("DURATION"));
+                roomRate.setPrice(rs.getFloat("PRICE"));
+                roomRate.setDown_payment(rs.getFloat("DOWN_PAYMENT"));
+                roomRate.setRefundable(rs.getFloat("REFUNDABLE"));
+                booking.setCheckIn(rs.getString("CHECK_IN_DATE"));
+                booking.setCheckOut(rs.getString("CHECK_OUT_DATE"));
+                if (rs.getDate("RESERVE") == null) {
+                    booking.setReserve(null);
+                } else {
+                    booking.setReserve(rs.getDate("RESERVE"));
+                }
+                payment.setAmount(rs.getFloat("AMOUNT"));
+                bill.setId(rs.getLong("ID"));
+                roomStatus.setStatus(rs.getString("STATUS"));
+                storey.setStorey(rs.getString("STOREY"));
+                roomType.setType(rs.getString("TYPE"));
+
+                room.setRoomStatus(roomStatus);
+                room.setRoomType(roomType);
+                room.setStorey(storey);
+                roomRate.setRoom(room);
+                roomRate.setDuration(duration);
+                booking.setRoomRate(roomRate);
+                bill.setCustomer(customer);
+                booking.setAmount(payment.getAmount());
+                
+                booking.setBill(bill);
+                payment.setBill(bill);
+                list.add(booking);
+            }
+            rs.close();
+            st.close();
+            closeConnection();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return list;
+    }
+
+    @Override
+    public ArrayList<Payment> selectRoomBookingPaymentListByRoomId(Long roomId) {
+        ArrayList<Payment> list = new ArrayList<Payment>();
+        try {
+            String query = "SELECT\n"
+                    + "    `room`.`room_number`\n"
+                    + "    , `duration`.`duration`\n"
+                    + "    , `room_rate`.`price`\n"
+                    + "    , `room_rate`.`down_payment`\n"
+                    + "    , `room_rate`.`refundable`\n"
+                    + "    , `booking`.`check_in_date`\n"
+                    + "    , `booking`.`check_out_date`\n"
+                    + "    , `payment`.`amount`\n"
+                    + "    , `bill`.`id`\n"
+                    + "    , `room_status`.`status`\n"
+                    + "    , `room_storey`.`storey`\n"
+                    + "    , `room_type`.`type`, `booking`.`reserve`\n"
+                    + "FROM\n"
+                    + "    `hrms`.`room_rate`\n"
+                    + "    INNER JOIN `hrms`.`room` \n"
+                    + "        ON (`room_rate`.`room_id` = `room`.`id`)\n"
+                    + "    INNER JOIN `hrms`.`duration` \n"
+                    + "        ON (`room_rate`.`duration_id` = `duration`.`id`)\n"
+                    + "    INNER JOIN `hrms`.`booking` \n"
+                    + "        ON (`booking`.`room_rate_id` = `room_rate`.`id`)\n"
+                    + "    INNER JOIN `hrms`.`bill` \n"
+                    + "        ON (`booking`.`bill_id` = `bill`.`id`)\n"
+                    + "    INNER JOIN `hrms`.`payment` \n"
+                    + "        ON (`payment`.`bill_id` = `bill`.`id`)\n"
+                    + "    INNER JOIN `hrms`.`customer` \n"
+                    + "        ON (`bill`.`customer_id` = `customer`.`id`)\n"
+                    + "    INNER JOIN `hrms`.`room_storey` \n"
+                    + "        ON (`room`.`storey_id` = `room_storey`.`id`)\n"
+                    + "    INNER JOIN `hrms`.`room_type` \n"
+                    + "        ON (`room`.`type_id` = `room_type`.`id`)\n"
+                    + "    INNER JOIN `hrms`.`room_status` \n"
+                    + "        ON (`room`.`status_id` = `room_status`.`id`)        \n"
+                    + "    WHERE  `booking`.`check_out_date`> CURRENT_TIMESTAMP()  AND `room`.`id` = " + roomId + " \n"
+                    + "    GROUP BY `room`.`room_number`\n"
+                    + "    , `duration`.`duration`\n"
+                    + "    , `room_rate`.`price`\n"
+                    + "    , `room_rate`.`down_payment`\n"
+                    + "    , `room_rate`.`refundable`\n"
+                    + "    , `booking`.`check_in_date`\n"
+                    + "    , `booking`.`check_out_date`\n"
+                    + "    , `payment`.`amount`\n"
+                    + "    , `bill`.`id`\n"
+                    + "    , `room_status`.`status`\n"
+                    + "    , `room_storey`.`storey`\n"
+                    + "    , `room_type`.`type`, `booking`.`reserve` ORDER BY `room`.`room_number` ASC ";
+            getDBConn();
+            Statement st = getCon().createStatement();
+            ResultSet rs = st.executeQuery(query);
+            while (rs.next()) {
+                Payment payment = new Payment();
+                Duration duration = new Duration();
+                RoomRate roomRate = new RoomRate();
+                Booking booking = new Booking();
+                Customer customer = new Customer();
+                RoomStatus roomStatus = new RoomStatus();
+                Storey storey = new Storey();
+                RoomType roomType = new RoomType();
+                Bill bill = new Bill();
+                Room room = new Room();
+                duration.setDuration(rs.getString("DURATION"));
+                roomRate.setPrice(rs.getFloat("PRICE"));
+                roomRate.setDown_payment(rs.getFloat("DOWN_PAYMENT"));
+                roomRate.setRefundable(rs.getFloat("REFUNDABLE"));
+                booking.setCheckIn(rs.getString("CHECK_IN_DATE"));
+                booking.setCheckOut(rs.getString("CHECK_OUT_DATE"));
+                if (rs.getDate("RESERVE") == null) {
+                    booking.setReserve(null);
+                } else {
+                    booking.setReserve(rs.getDate("RESERVE"));
+                }
+                payment.setAmount(rs.getFloat("AMOUNT"));
+                bill.setId(rs.getLong("ID"));
+                roomStatus.setStatus(rs.getString("STATUS"));
+                storey.setStorey(rs.getString("STOREY"));
+                roomType.setType(rs.getString("TYPE"));
+
+                room.setRoomStatus(roomStatus);
+                room.setRoomType(roomType);
+                room.setStorey(storey);
+                roomRate.setRoom(room);
+                roomRate.setDuration(duration);
+                booking.setRoomRate(roomRate);
+                bill.setCustomer(customer);
+                booking.setBill(bill);
+                payment.setBill(bill);
+                list.add(payment);
+            }
+            rs.close();
+            st.close();
+            closeConnection();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return list;
+    }
+
 }

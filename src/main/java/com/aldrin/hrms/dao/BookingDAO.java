@@ -5,6 +5,8 @@
 package com.aldrin.hrms.dao;
 
 import com.aldrin.hrms.model.Booking;
+import com.aldrin.hrms.model.Payment;
+import java.util.ArrayList;
 
 /**
  *
@@ -28,5 +30,9 @@ public interface BookingDAO {
     public Booking selectRoomBookingByRoomId(Long roomId);
     
     public Booking selectRoomBookingByRoomIdAndCheckOutAndCheckIn(Long roomId,String checkIn,String checkOut);
+    
+    public ArrayList<Booking> selectRoomBookingListByRoomId(Long roomId);
+    
+    public ArrayList<Payment> selectRoomBookingPaymentListByRoomId(Long roomId);
 
 }
