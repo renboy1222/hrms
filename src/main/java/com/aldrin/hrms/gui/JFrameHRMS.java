@@ -103,6 +103,7 @@ public class JFrameHRMS extends javax.swing.JFrame implements MouseListener {
         jPanel14 = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
+        jMenuItem10 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
@@ -319,6 +320,15 @@ public class JFrameHRMS extends javax.swing.JFrame implements MouseListener {
         getContentPane().add(jPanel2, java.awt.BorderLayout.NORTH);
 
         jMenu1.setText("File");
+
+        jMenuItem10.setText("Login");
+        jMenuItem10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem10ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem10);
+
         jMenuBar1.add(jMenu1);
 
         jMenu2.setText("Settings");
@@ -464,6 +474,11 @@ public class JFrameHRMS extends javax.swing.JFrame implements MouseListener {
         userReport.setVisible(true);
     }//GEN-LAST:event_jButton3ActionPerformed
 
+    private void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
+        JDialogLogin login = new JDialogLogin(this, true);
+        login.setVisible(true);
+    }//GEN-LAST:event_jMenuItem10ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
@@ -473,6 +488,7 @@ public class JFrameHRMS extends javax.swing.JFrame implements MouseListener {
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem10;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
@@ -543,7 +559,7 @@ public class JFrameHRMS extends javax.swing.JFrame implements MouseListener {
         }
         
         public boolean isCellEditable(int row, int col) {
-            if (col < 10) {
+            if (col < 30) {
                 return false;
                 
             } else {
@@ -834,4 +850,7 @@ public class JFrameHRMS extends javax.swing.JFrame implements MouseListener {
             }
         });
     }
+    
+    
+    
 }

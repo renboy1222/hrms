@@ -40,6 +40,7 @@ public class JDialogCashReceive extends javax.swing.JDialog {
         comboBoxFromInvoice();
         comboBoxToInvoice();
         jTextFieldSearch.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Search");
+        calculateTotal();
 
 //        selectPaymentReceived();
     }
@@ -61,7 +62,6 @@ public class JDialogCashReceive extends javax.swing.JDialog {
         jTableCategory = new javax.swing.JTable();
         jPanel8 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         jLabelTotal = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
@@ -122,9 +122,6 @@ public class JDialogCashReceive extends javax.swing.JDialog {
 
         jPanel5.setPreferredSize(new java.awt.Dimension(915, 80));
         jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jButton1.setText("Print");
-        jPanel5.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 83, 38));
 
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel5.setText("Total:");
@@ -224,6 +221,7 @@ public class JDialogCashReceive extends javax.swing.JDialog {
         ComboBoxList toId = (ComboBoxList) this.jComboBoxTo.getSelectedItem();
         setToId(toId.getId());
         selectPaymentReceived();
+
     }//GEN-LAST:event_jComboBoxToActionPerformed
 
     private void jComboBoxUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxUserActionPerformed
@@ -237,7 +235,6 @@ public class JDialogCashReceive extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.aldrin.hrms.util.JALabel jALabel1;
     private com.aldrin.hrms.util.JALabel jALabel2;
-    private javax.swing.JButton jButton1;
     private javax.swing.JComboBox<Object> jComboBoxFrom;
     private javax.swing.JComboBox<Object> jComboBoxTo;
     private javax.swing.JComboBox<Object> jComboBoxUser;
@@ -336,6 +333,7 @@ public class JDialogCashReceive extends javax.swing.JDialog {
         for (Payment p : paymentList) {
             tableModel.addRow(new Object[]{p.getId(), p.getCreatedAtF(), p.getBill().getCustomer().getName(), df.format(p.getAmount()), p.getAmount()});
         }
+        calculateTotal();
 
     }
 
@@ -379,6 +377,15 @@ public class JDialogCashReceive extends javax.swing.JDialog {
      */
     public static void setToId(Long aToId) {
         toId = aToId;
+    }
+
+    private void calculateTotal() {
+        float total = 0.0f;
+        for (int i = 0; i < jTableCategory.getRowCount(); i++) {
+            float amount = (float) jTableCategory.getValueAt(i, 4);
+            total = total + amount;
+        }
+        jLabelTotal.setText(String.valueOf(df.format(total)));
     }
 
 }

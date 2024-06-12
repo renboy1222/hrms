@@ -60,8 +60,6 @@ public class JDialogAddBooking extends javax.swing.JDialog {
         jComboBoxDuration = new javax.swing.JComboBox<>();
         jLabel6 = new javax.swing.JLabel();
         jTextFieldPrice = new javax.swing.JTextField();
-        jTextFieldStatus = new javax.swing.JTextField();
-        jTextFieldType = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jLabel8 = new javax.swing.JLabel();
@@ -126,8 +124,6 @@ public class JDialogAddBooking extends javax.swing.JDialog {
         jLabel6.setText("CHECK-IN:");
         jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 270, 100, 30));
         jPanel1.add(jTextFieldPrice, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 190, 120, 30));
-        jPanel1.add(jTextFieldStatus, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 110, 60, 30));
-        jPanel1.add(jTextFieldType, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 110, 60, 30));
 
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel7.setText("BOOKING:");
@@ -382,13 +378,11 @@ public class JDialogAddBooking extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField jTextFieldDownPayment;
     private javax.swing.JTextField jTextFieldPrice;
-    private javax.swing.JTextField jTextFieldStatus;
-    private javax.swing.JTextField jTextFieldType;
     // End of variables declaration//GEN-END:variables
-     public static void main(String[] args) {
-        JDialogAddBooking add = new JDialogAddBooking(null, true);
-        add.setVisible(true);
-    }
+//     public static void main(String[] args) {
+//        JDialogAddBooking add = new JDialogAddBooking(null, true);
+//        add.setVisible(true);
+//    }
 
     private RoomDAOImpl roomDAOImpl = new RoomDAOImpl();
     private RoomRateDAOImpl roomRateDAOImpl = new RoomRateDAOImpl();
