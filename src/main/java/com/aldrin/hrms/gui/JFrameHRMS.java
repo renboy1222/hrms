@@ -4,71 +4,73 @@
  */
 package com.aldrin.hrms.gui;
 
-//import com.aldrin.hrms.CustomHeaderRenderer;
-import com.aldrin.hrms.dao.impl.BookingDAOImpl;
-import com.aldrin.hrms.dao.impl.PaymentDAOImpl;
-import com.aldrin.hrms.dao.impl.RoomDAOImpl;
-import com.aldrin.hrms.gui.dialog.JDialogCustomer;
-import com.aldrin.hrms.gui.dialog.JDialogDuration;
-import com.aldrin.hrms.gui.dialog.JDialogRoom;
-import com.aldrin.hrms.gui.dialog.JDialogRoomRate;
-import com.aldrin.hrms.gui.dialog.JDialogRoomStatus;
-import com.aldrin.hrms.gui.dialog.JDialogRoomType;
-import com.aldrin.hrms.gui.dialog.JDialogStorey;
-import com.aldrin.hrms.gui.dialog.JDialogUser;
-import com.aldrin.hrms.model.Booking;
-import com.aldrin.hrms.model.Payment;
-import com.aldrin.hrms.model.Room;
-import com.aldrin.hrms.util.ColumnGroup;
-import com.aldrin.hrms.util.GroupableTableHeader;
-import com.aldrin.hrms.util.StringToDate;
-import com.formdev.flatlaf.FlatClientProperties;
+import com.aldrin.hrms.Hrms;
+import com.aldrin.hrms.dao.impl.UserDAOImpl;
+import com.aldrin.hrms.gui.panel.JPanelAnalytics;
+import com.aldrin.hrms.gui.panel.JPanelSales;
+import com.aldrin.hrms.gui.panel.JPanelBooking;
+import com.aldrin.hrms.gui.panel.JPanelDashboard;
+import com.aldrin.hrms.gui.panel.JPanelSettings;
+import com.aldrin.hrms.model.User;
+import com.aldrin.hrms.util.LoginUser;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import javax.swing.JTable;
-import javax.swing.RowFilter;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.RenderingHints;
+import java.awt.geom.Ellipse2D;
+import java.awt.image.BufferedImage;
+import java.util.prefs.Preferences;
+import javax.swing.ImageIcon;
+import javax.swing.JPanel;
 
 /**
  *
  * @author Java Programming with Aldrin
  */
-public class JFrameHRMS extends javax.swing.JFrame implements MouseListener {
+public class JFrameHRMS extends javax.swing.JFrame {
+
+//    Font fontSize16 = UIManager.getFont("h3.regular.font");
+    LoginUser loginUser = new LoginUser();
+    private static final String USERNAME_PREF_KEY = "username";
+    private static final String PASSWORD_PREF_KEY = "password";
+    Preferences preferences = Preferences.userNodeForPackage(Hrms.class);
+
+    private CardLayout cardLayout = new CardLayout();
+    private JPanel cardsPanel = new JPanel(cardLayout);
+    JPanelDashboard panelDashboard = new JPanelDashboard();
+    JPanelBooking panelContent = new JPanelBooking(this);
+    JPanelSales panelComments = new JPanelSales();
+    JPanelAnalytics panelAnalytics = new JPanelAnalytics();
+    JPanelSettings panelSettings = new JPanelSettings();
 
     /**
-     * Creates new form JFrameHRMS
+     * Creates new form JFrameApp
      */
-    private DecimalFormat df = new DecimalFormat("##,##0.00");
-    
     public JFrameHRMS() {
         initComponents();
+//        Font newFont = fontSize16.deriveFont(16);
+//        UIManager.put("defaultFont", newFont);
         FlatLaf.updateUI();
         FlatSVGIcon icon = new FlatSVGIcon("svg/calculator.svg", 24, 24);
         setIconImage(icon.getImage());
-        jTextFieldSearch.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Search");
-        jTextFieldSearch.putClientProperty(FlatClientProperties.TEXT_FIELD_LEADING_ICON, new FlatSVGIcon("svg/search.svg", 24, 24));
-        setTable();
-        selectRoom();
-        popUpMenu();
+        setVisible(true);
+        String storedUsername = preferences.get(USERNAME_PREF_KEY, null);
+        String storedPassword = preferences.get(PASSWORD_PREF_KEY, null);
+        jMenuItemLogout.setVisible(false);
+        loginUser.setUser(null);
+
+        saveLoginCredentials();
+
+        cardsPanel.add(panelDashboard, "Dashboard");
+        cardsPanel.add(panelContent, "Booking");
+        cardsPanel.add(panelComments, "Comments");
+        cardsPanel.add(panelAnalytics, "Analytics");
+        cardsPanel.add(panelSettings, "Settings");
+        jPanel2.add(cardsPanel, BorderLayout.CENTER);
+
     }
 
     /**
@@ -82,775 +84,339 @@ public class JFrameHRMS extends javax.swing.JFrame implements MouseListener {
 
         jPanel1 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
-        jPanel5 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jPanel6 = new javax.swing.JPanel();
-        jPanel7 = new javax.swing.JPanel();
-        jPanel8 = new javax.swing.JPanel();
-        jPanel9 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
-        jPanel10 = new javax.swing.JPanel();
-        jTextFieldSearch = new javax.swing.JTextField();
-        jPanel11 = new javax.swing.JPanel();
-        jPanel12 = new javax.swing.JPanel();
+        jPanelSideBarButtons = new javax.swing.JPanel();
+        jButtonDashboard = new javax.swing.JButton();
+        jButtonContent = new javax.swing.JButton();
+        jButtonComments = new javax.swing.JButton();
+        jButtonAnalytics = new javax.swing.JButton();
+        jButtonSettings = new javax.swing.JButton();
+        jPanel7 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
-        jToolBar1 = new javax.swing.JToolBar();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jPanel13 = new javax.swing.JPanel();
-        jPanel14 = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
-        jMenuItem10 = new javax.swing.JMenuItem();
+        jMenuApp = new javax.swing.JMenu();
+        jMenuItemLogin = new javax.swing.JMenuItem();
+        jMenuItemLogout = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuSettings = new javax.swing.JMenu();
+        jMenuItem3 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
-        jMenuItem4 = new javax.swing.JMenuItem();
-        jMenuItem3 = new javax.swing.JMenuItem();
-        jMenuItem5 = new javax.swing.JMenuItem();
-        jMenuItem6 = new javax.swing.JMenuItem();
-        jMenuItem7 = new javax.swing.JMenuItem();
-        jMenuItem8 = new javax.swing.JMenuItem();
-        jMenuItem9 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("HRMS - HOTEL ROOM MANAGEMENT SYSTEM");
+        setTitle("Remember me Login App");
 
+        jPanel1.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 0, new java.awt.Color(102, 102, 102)));
         jPanel1.setLayout(new java.awt.BorderLayout());
 
+        jPanel3.setOpaque(false);
+        jPanel3.setPreferredSize(new java.awt.Dimension(140, 10));
         jPanel3.setLayout(new java.awt.BorderLayout());
 
-        jPanel5.setLayout(new java.awt.BorderLayout());
-
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-
-        ));
-        jScrollPane1.setViewportView(jTable1);
-
-        jPanel5.add(jScrollPane1, java.awt.BorderLayout.CENTER);
-
-        jPanel3.add(jPanel5, java.awt.BorderLayout.CENTER);
-
-        jPanel6.setPreferredSize(new java.awt.Dimension(1252, 10));
-
-        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
-        jPanel6.setLayout(jPanel6Layout);
-        jPanel6Layout.setHorizontalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1172, Short.MAX_VALUE)
-        );
-        jPanel6Layout.setVerticalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 10, Short.MAX_VALUE)
-        );
-
-        jPanel3.add(jPanel6, java.awt.BorderLayout.NORTH);
-
-        jPanel7.setPreferredSize(new java.awt.Dimension(1252, 10));
-        jPanel3.add(jPanel7, java.awt.BorderLayout.SOUTH);
-
-        jPanel8.setPreferredSize(new java.awt.Dimension(10, 503));
-
-        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
-        jPanel8.setLayout(jPanel8Layout);
-        jPanel8Layout.setHorizontalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 10, Short.MAX_VALUE)
-        );
-        jPanel8Layout.setVerticalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 465, Short.MAX_VALUE)
-        );
-
-        jPanel3.add(jPanel8, java.awt.BorderLayout.EAST);
-
-        jPanel9.setPreferredSize(new java.awt.Dimension(10, 503));
-
-        javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
-        jPanel9.setLayout(jPanel9Layout);
-        jPanel9Layout.setHorizontalGroup(
-            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 10, Short.MAX_VALUE)
-        );
-        jPanel9Layout.setVerticalGroup(
-            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 465, Short.MAX_VALUE)
-        );
-
-        jPanel3.add(jPanel9, java.awt.BorderLayout.WEST);
-
-        jPanel1.add(jPanel3, java.awt.BorderLayout.CENTER);
-
-        jPanel4.setMinimumSize(new java.awt.Dimension(64, 32));
-        jPanel4.setPreferredSize(new java.awt.Dimension(1252, 32));
+        jPanel4.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 0, new java.awt.Color(102, 102, 102)));
+        jPanel4.setOpaque(false);
         jPanel4.setLayout(new java.awt.BorderLayout());
 
-        jPanel10.setLayout(new java.awt.BorderLayout());
+        jPanelSideBarButtons.setOpaque(false);
+        jPanelSideBarButtons.setPreferredSize(new java.awt.Dimension(10, 160));
+        jPanelSideBarButtons.setLayout(new java.awt.GridLayout(0, 1));
 
-        jTextFieldSearch.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                jTextFieldSearchKeyReleased(evt);
+        jButtonDashboard.setIcon(new FlatSVGIcon("svg/dashboard.svg",16,16));
+        jButtonDashboard.setText("Dashboard");
+        jButtonDashboard.setBorder(null);
+        jButtonDashboard.setBorderPainted(false);
+        jButtonDashboard.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jButtonDashboard.setMargin(new java.awt.Insets(2, 5, 2, 0));
+        jButtonDashboard.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonDashboardActionPerformed(evt);
             }
         });
-        jPanel10.add(jTextFieldSearch, java.awt.BorderLayout.CENTER);
+        jPanelSideBarButtons.add(jButtonDashboard);
 
-        jPanel4.add(jPanel10, java.awt.BorderLayout.CENTER);
+        jButtonContent.setIcon(new FlatSVGIcon("svg/content.svg",16,16));
+        jButtonContent.setText("Booking");
+        jButtonContent.setBorder(null);
+        jButtonContent.setBorderPainted(false);
+        jButtonContent.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jButtonContent.setMargin(new java.awt.Insets(2, 5, 2, 0));
+        jButtonContent.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonContentActionPerformed(evt);
+            }
+        });
+        jPanelSideBarButtons.add(jButtonContent);
 
-        jPanel11.setPreferredSize(new java.awt.Dimension(10, 34));
+        jButtonComments.setIcon(new FlatSVGIcon("svg/comments.svg",16,16));
+        jButtonComments.setText("Sales");
+        jButtonComments.setBorder(null);
+        jButtonComments.setBorderPainted(false);
+        jButtonComments.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jButtonComments.setMargin(new java.awt.Insets(2, 5, 2, 0));
+        jButtonComments.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonCommentsActionPerformed(evt);
+            }
+        });
+        jPanelSideBarButtons.add(jButtonComments);
 
-        javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
-        jPanel11.setLayout(jPanel11Layout);
-        jPanel11Layout.setHorizontalGroup(
-            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 10, Short.MAX_VALUE)
-        );
-        jPanel11Layout.setVerticalGroup(
-            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 32, Short.MAX_VALUE)
-        );
+        jButtonAnalytics.setIcon(new FlatSVGIcon("svg/analytics.svg",16,16));
+        jButtonAnalytics.setText("Analytics");
+        jButtonAnalytics.setBorder(null);
+        jButtonAnalytics.setBorderPainted(false);
+        jButtonAnalytics.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jButtonAnalytics.setMargin(new java.awt.Insets(2, 5, 2, 0));
+        jButtonAnalytics.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAnalyticsActionPerformed(evt);
+            }
+        });
+        jPanelSideBarButtons.add(jButtonAnalytics);
 
-        jPanel4.add(jPanel11, java.awt.BorderLayout.WEST);
+        jButtonSettings.setIcon(new FlatSVGIcon("svg/settings.svg",16,16));
+        jButtonSettings.setText("Settings");
+        jButtonSettings.setBorder(null);
+        jButtonSettings.setBorderPainted(false);
+        jButtonSettings.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jButtonSettings.setMargin(new java.awt.Insets(2, 5, 2, 0));
+        jButtonSettings.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSettingsActionPerformed(evt);
+            }
+        });
+        jPanelSideBarButtons.add(jButtonSettings);
 
-        jPanel12.setPreferredSize(new java.awt.Dimension(10, 34));
+        jPanel4.add(jPanelSideBarButtons, java.awt.BorderLayout.NORTH);
 
-        javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
-        jPanel12.setLayout(jPanel12Layout);
-        jPanel12Layout.setHorizontalGroup(
-            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 10, Short.MAX_VALUE)
-        );
-        jPanel12Layout.setVerticalGroup(
-            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 32, Short.MAX_VALUE)
-        );
+        jPanel7.setOpaque(false);
+        jPanel4.add(jPanel7, java.awt.BorderLayout.CENTER);
 
-        jPanel4.add(jPanel12, java.awt.BorderLayout.EAST);
+        jPanel3.add(jPanel4, java.awt.BorderLayout.CENTER);
 
-        jPanel1.add(jPanel4, java.awt.BorderLayout.NORTH);
+        jPanel1.add(jPanel3, java.awt.BorderLayout.WEST);
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 1, 0, 0, new java.awt.Color(153, 153, 153)));
+        jPanel2.setLayout(new java.awt.BorderLayout());
+        jPanel1.add(jPanel2, java.awt.BorderLayout.CENTER);
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
 
-        jPanel2.setPreferredSize(new java.awt.Dimension(1252, 46));
-        jPanel2.setLayout(new java.awt.BorderLayout());
+        jMenuApp.setText("App");
 
-        jToolBar1.setFloatable(true);
-
-        jButton1.setIcon(new FlatSVGIcon("svg/booking.svg",40,40));
-        jButton1.setToolTipText("Booking");
-        jButton1.setFocusable(false);
-        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton1.setMargin(new java.awt.Insets(2, 2, 2, 2));
-        jButton1.setMaximumSize(new java.awt.Dimension(42, 42));
-        jButton1.setMinimumSize(new java.awt.Dimension(42, 42));
-        jButton1.setPreferredSize(new java.awt.Dimension(42, 42));
-        jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jMenuItemLogin.setText("Login");
+        jMenuItemLogin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jMenuItemLoginActionPerformed(evt);
             }
         });
-        jToolBar1.add(jButton1);
+        jMenuApp.add(jMenuItemLogin);
 
-        jButton2.setIcon(new FlatSVGIcon("svg/booking.svg",40,40));
-        jButton2.setToolTipText("User sales");
-        jButton2.setFocusable(false);
-        jButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton2.setMargin(new java.awt.Insets(2, 2, 2, 2));
-        jButton2.setMaximumSize(new java.awt.Dimension(42, 42));
-        jButton2.setMinimumSize(new java.awt.Dimension(42, 42));
-        jButton2.setPreferredSize(new java.awt.Dimension(42, 42));
-        jButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        jMenuItemLogout.setText("Logout");
+        jMenuItemLogout.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                jMenuItemLogoutActionPerformed(evt);
             }
         });
-        jToolBar1.add(jButton2);
+        jMenuApp.add(jMenuItemLogout);
+        jMenuApp.add(jSeparator1);
 
-        jButton3.setIcon(new FlatSVGIcon("svg/booking.svg",40,40));
-        jButton3.setToolTipText("User sales report");
-        jButton3.setFocusable(false);
-        jButton3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton3.setMargin(new java.awt.Insets(2, 2, 2, 2));
-        jButton3.setMaximumSize(new java.awt.Dimension(42, 42));
-        jButton3.setMinimumSize(new java.awt.Dimension(42, 42));
-        jButton3.setPreferredSize(new java.awt.Dimension(42, 42));
-        jButton3.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
-            }
-        });
-        jToolBar1.add(jButton3);
+        jMenuItem2.setText("Exit");
+        jMenuApp.add(jMenuItem2);
 
-        jPanel2.add(jToolBar1, java.awt.BorderLayout.CENTER);
+        jMenuBar1.add(jMenuApp);
 
-        jPanel13.setPreferredSize(new java.awt.Dimension(10, 46));
+        jMenuSettings.setText("Settings");
 
-        javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
-        jPanel13.setLayout(jPanel13Layout);
-        jPanel13Layout.setHorizontalGroup(
-            jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 10, Short.MAX_VALUE)
-        );
-        jPanel13Layout.setVerticalGroup(
-            jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-
-        jPanel2.add(jPanel13, java.awt.BorderLayout.EAST);
-
-        jPanel14.setPreferredSize(new java.awt.Dimension(10, 100));
-
-        javax.swing.GroupLayout jPanel14Layout = new javax.swing.GroupLayout(jPanel14);
-        jPanel14.setLayout(jPanel14Layout);
-        jPanel14Layout.setHorizontalGroup(
-            jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 10, Short.MAX_VALUE)
-        );
-        jPanel14Layout.setVerticalGroup(
-            jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 46, Short.MAX_VALUE)
-        );
-
-        jPanel2.add(jPanel14, java.awt.BorderLayout.WEST);
-
-        getContentPane().add(jPanel2, java.awt.BorderLayout.NORTH);
-
-        jMenu1.setText("File");
-
-        jMenuItem10.setText("Login");
-        jMenuItem10.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem10ActionPerformed(evt);
-            }
-        });
-        jMenu1.add(jMenuItem10);
-
-        jMenuBar1.add(jMenu1);
-
-        jMenu2.setText("Settings");
-
-        jMenuItem1.setText("Room Type");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
-            }
-        });
-        jMenu2.add(jMenuItem1);
-
-        jMenuItem2.setText("Room Status");
-        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem2ActionPerformed(evt);
-            }
-        });
-        jMenu2.add(jMenuItem2);
-
-        jMenuItem4.setText("Customer");
-        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem4ActionPerformed(evt);
-            }
-        });
-        jMenu2.add(jMenuItem4);
-
-        jMenuItem3.setText("Room");
+        jMenuItem3.setText("User");
         jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem3ActionPerformed(evt);
             }
         });
-        jMenu2.add(jMenuItem3);
+        jMenuSettings.add(jMenuItem3);
 
-        jMenuItem5.setText("Booking");
-        jMenu2.add(jMenuItem5);
+        jMenuBar1.add(jMenuSettings);
 
-        jMenuItem6.setText("User");
-        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem6ActionPerformed(evt);
-            }
-        });
-        jMenu2.add(jMenuItem6);
+        jMenu2.setText("Help");
 
-        jMenuItem7.setText("Storey");
-        jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem7ActionPerformed(evt);
-            }
-        });
-        jMenu2.add(jMenuItem7);
-
-        jMenuItem8.setText("Room Rate");
-        jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem8ActionPerformed(evt);
-            }
-        });
-        jMenu2.add(jMenuItem8);
-
-        jMenuItem9.setText("Duration");
-        jMenuItem9.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem9ActionPerformed(evt);
-            }
-        });
-        jMenu2.add(jMenuItem9);
+        jMenuItem1.setText("About");
+        jMenu2.add(jMenuItem1);
 
         jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);
 
-        setSize(new java.awt.Dimension(1188, 594));
+        setSize(new java.awt.Dimension(1287, 580));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        JDialogRoomType roomType = new JDialogRoomType(this, true);
-        roomType.setVisible(true);
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
-
-    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-        JDialogRoomStatus roomStatus = new JDialogRoomStatus(this, true);
-        roomStatus.setVisible(true);
-    }//GEN-LAST:event_jMenuItem2ActionPerformed
-
-    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
-        JDialogCustomer customer = new JDialogCustomer(this, true);
-        customer.setVisible(true);
-    }//GEN-LAST:event_jMenuItem4ActionPerformed
-
-    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-        JDialogRoom room = new JDialogRoom(this, true);
-        room.setVisible(true);
-        selectRoom();
-    }//GEN-LAST:event_jMenuItem3ActionPerformed
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        JDialogBooking booking = new JDialogBooking(this, true);
-        booking.setVisible(true);
-        selectRoom();
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
-        JDialogUser user = new JDialogUser(this, true);
-        user.setVisible(true);
-    }//GEN-LAST:event_jMenuItem6ActionPerformed
-
-    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
-        JDialogStorey storey = new JDialogStorey(this, true);
-        storey.setVisible(true);
-    }//GEN-LAST:event_jMenuItem7ActionPerformed
-
-    private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
-        JDialogRoomRate rRate = new JDialogRoomRate(this, true);
-        rRate.setVisible(true);
-    }//GEN-LAST:event_jMenuItem8ActionPerformed
-
-    private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
-        JDialogDuration duration = new JDialogDuration(this, true);
-        duration.setVisible(true);
-    }//GEN-LAST:event_jMenuItem9ActionPerformed
-
-    private void jTextFieldSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldSearchKeyReleased
-        String text = jTextFieldSearch.getText().trim();
-        if (text.length() == 0) {
-            sorter.setRowFilter(null);
-        } else {
-            sorter.setRowFilter(RowFilter.regexFilter("(?i)" + text + ",*"));
-        }
-    }//GEN-LAST:event_jTextFieldSearchKeyReleased
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        JDialogCashReceive cashReceive = new JDialogCashReceive(this, true);
-        cashReceive.setVisible(true);
-    }//GEN-LAST:event_jButton2ActionPerformed
-
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        JDialogUserSalesReport userReport = new JDialogUserSalesReport(this, true);
-        userReport.setVisible(true);
-    }//GEN-LAST:event_jButton3ActionPerformed
-
-    private void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
+    private void jMenuItemLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemLoginActionPerformed
         JDialogLogin login = new JDialogLogin(this, true);
         login.setVisible(true);
-    }//GEN-LAST:event_jMenuItem10ActionPerformed
+        loginUser();
+    }//GEN-LAST:event_jMenuItemLoginActionPerformed
+
+    private void jMenuItemLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemLogoutActionPerformed
+        jPanelSideBarButtons.setVisible(false);
+        cardsPanel.setVisible(false);
+        clearLoginCredentials();
+        loginUser.setUser(null);
+        loginUser();
+        JDialogLogin login = new JDialogLogin(this, true);
+        login.setVisible(true);
+        loginUser();
+    }//GEN-LAST:event_jMenuItemLogoutActionPerformed
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+    private void jButtonSettingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSettingsActionPerformed
+        cardLayout.show(cardsPanel, "Settings");
+    }//GEN-LAST:event_jButtonSettingsActionPerformed
+
+    private void jButtonDashboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDashboardActionPerformed
+
+        cardLayout.show(cardsPanel, "Dashboard");
+
+    }//GEN-LAST:event_jButtonDashboardActionPerformed
+
+    private void jButtonContentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonContentActionPerformed
+        cardLayout.show(cardsPanel, "Booking");
+    }//GEN-LAST:event_jButtonContentActionPerformed
+
+    private void jButtonCommentsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCommentsActionPerformed
+        cardLayout.show(cardsPanel, "Comments");
+    }//GEN-LAST:event_jButtonCommentsActionPerformed
+
+    private void jButtonAnalyticsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAnalyticsActionPerformed
+        cardLayout.show(cardsPanel, "Analytics");
+    }//GEN-LAST:event_jButtonAnalyticsActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JMenu jMenu1;
+    private javax.swing.JButton jButtonAnalytics;
+    private javax.swing.JButton jButtonComments;
+    private javax.swing.JButton jButtonContent;
+    private javax.swing.JButton jButtonDashboard;
+    private javax.swing.JButton jButtonSettings;
     private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenuApp;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem10;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JMenuItem jMenuItem4;
-    private javax.swing.JMenuItem jMenuItem5;
-    private javax.swing.JMenuItem jMenuItem6;
-    private javax.swing.JMenuItem jMenuItem7;
-    private javax.swing.JMenuItem jMenuItem8;
-    private javax.swing.JMenuItem jMenuItem9;
+    private javax.swing.JMenuItem jMenuItemLogin;
+    private javax.swing.JMenuItem jMenuItemLogout;
+    private javax.swing.JMenu jMenuSettings;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel10;
-    private javax.swing.JPanel jPanel11;
-    private javax.swing.JPanel jPanel12;
-    private javax.swing.JPanel jPanel13;
-    private javax.swing.JPanel jPanel14;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
-    private javax.swing.JPanel jPanel8;
-    private javax.swing.JPanel jPanel9;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextFieldSearch;
-    private javax.swing.JToolBar jToolBar1;
+    private javax.swing.JPanel jPanelSideBarButtons;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
     // End of variables declaration//GEN-END:variables
+private void loginUser() {
+        if (loginUser.getUser() != null) {
+//            login 
+            cardsPanel.setVisible(true);
+            cardsPanel.add(panelDashboard, "Dashboard");
+//            cardsPanel.add(panelContent, "Booking");
+            cardsPanel.add(panelComments, "Sales");
+            cardsPanel.add(panelAnalytics, "Analytics");
+            cardsPanel.add(panelSettings, "Settings");
+            jPanel2.add(cardsPanel, BorderLayout.CENTER);
+            jMenuApp.setText(loginUser.getUser().getSurname() + ", " + loginUser.getUser().getFirstname());
+            jMenuItemLogout.setVisible(true);
+            jMenuItemLogin.setVisible(false);
+            jPanelSideBarButtons.setVisible(true);
+            displayPicture(loginUser.getUser());
+            if (loginUser.getUser().getRole().getRole().equals("ADMIN")) {
+                jMenuSettings.setVisible(true);
+                jButtonSettings.setEnabled(true);
+            } else if (loginUser.getUser().getRole().getRole().equals("USER")) {
+                jMenuSettings.setVisible(false);
+                jButtonSettings.setEnabled(false);
+            }
+        } else {
+//            logout
+            jMenuApp.setText("App");
+            jMenuItemLogout.setVisible(false);
+            jMenuSettings.setVisible(false);
+            jMenuItemLogin.setVisible(true);
+            jPanelSideBarButtons.setVisible(false);
 
-//    ""ID", "TYPE ID", "STATUS ID", "ROOM NUMBER", "PRICE", "PRICE UF", "STATUS", "TYPE", "CAPACITY"" 0-8
-//    "CHECK-IN","CHECK-OUT","CUSTOMER","PAYMENT" 9-12 BOOK
-//    "CHECK-IN","CHECK-OUT","CUSTOMER","DOWN PAYMENT" 13-16 RESERVATION
-    public DefaultTableModel tableModel = new DefaultTableModel(new Object[]{"ID", "TYPE ID", "STATUS ID", "ROOM #", "PRICE", "PRICE UF", "STATUS", "TYPE", "CAPACITY",
-        "DURATION", "CHECK-IN", "CHECK-OUT", "CHECK-IN UF", "CHECK-OUT UF", "PAID", "DOWN PAYMENT", "INSUFFICIENT", "REFUNDABLE", "BILL ID", "RESERVE"}, 0) {
-        public Class getColumnClass(int columnIndex) {
-            if (columnIndex == 0) {
-                return String.class;
-            }
-            switch (columnIndex) {
-                case 1:
-                    return String.class;
-                case 2:
-                    return String.class;
-                case 3:
-                    return String.class;
-                case 4:
-                    return Integer.class;
-                case 5:
-                    return String.class;
-                case 6:
-                    return String.class;
-                case 7:
-                    return String.class;
-                case 8:
-                    return Integer.class;
-                case 14:
-                    return Integer.class;
-                case 15:
-                    return Integer.class;
-                case 16:
-                    return Integer.class;
-                case 17:
-                    return Integer.class;
-                case 19:
-                    return Boolean.class;
-                default:
-                    return String.class;
-            }
         }
-        
-        public boolean isCellEditable(int row, int col) {
-            if (col < 30) {
-                return false;
-                
-            } else {
-                return true;
-            }
-        }
-        
-    };
-    private TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(tableModel);
-    
-    private void setTable() {
-        jTable1 = new JTable(tableModel) {
-            @Override
-            public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
-                Component component = super.prepareRenderer(renderer, row, column);
-                if (isRowSelected(row)) {
-                    component.setBackground(getSelectionBackground());
-                } else {
-                    component.setBackground(row % 2 == 0 ? getBackground() : Color.decode("#F5F5F5")); // Alternate row color
-                }
-                
-                return component;
-            }
-            
-            protected JTableHeader createDefaultTableHeader() {
-                return new GroupableTableHeader(columnModel);
-            }
-            
-        };
-        
-        TableColumnModel cm = jTable1.getColumnModel();
-        ColumnGroup g_lang = new ColumnGroup("ROOM INFORMATION");
-        g_lang.add(cm.getColumn(3));
-        g_lang.add(cm.getColumn(4));
-        g_lang.add(cm.getColumn(5));
-        g_lang.add(cm.getColumn(6));
-        g_lang.add(cm.getColumn(7));
-        g_lang.add(cm.getColumn(8));
-        ColumnGroup g_name = new ColumnGroup("BOOKING");
-//        g_name.setHeaderRenderer(new CustomHeaderRenderer());
-        g_name.add(cm.getColumn(9));
-        g_name.add(cm.getColumn(10));
-        g_name.add(cm.getColumn(11));
-        g_name.add(cm.getColumn(12));
-        g_name.add(cm.getColumn(12));
-        g_name.add(cm.getColumn(13));
-        g_name.add(cm.getColumn(14));
-        g_name.add(cm.getColumn(15));
-        g_name.add(cm.getColumn(16));
-        g_name.add(cm.getColumn(17));
-        g_name.add(cm.getColumn(18));
-        g_name.add(cm.getColumn(19));
-        
-        GroupableTableHeader header = (GroupableTableHeader) jTable1.getTableHeader();
-        header.addColumnGroup(g_name);
-        header.addColumnGroup(g_lang);
-        header.setPreferredSize(new Dimension(header.getPreferredSize().width, 40)); // Optional: Adjust header height
-        header.setBackground(new java.awt.Color(204, 204, 204));
-        jTable1.setRowSorter(sorter);
-        jTable1.addMouseListener(this);
-        
-        jTable1.setDefaultRenderer(Object.class, new JFrameHRMS.CustomTableCellRenderer());
-        
-        jScrollPane1.setViewportView(jTable1);
-        TableColumn hide0 = jTable1.getColumnModel().getColumn(0);
-        hide0.setMinWidth(0);
-        hide0.setMaxWidth(0);
-        hide0.setPreferredWidth(0);
-        TableColumn hide1 = jTable1.getColumnModel().getColumn(1);
-        hide1.setMinWidth(0);
-        hide1.setMaxWidth(0);
-        hide1.setPreferredWidth(0);
-        TableColumn hide2 = jTable1.getColumnModel().getColumn(2);
-        hide2.setMinWidth(0);
-        hide2.setMaxWidth(0);
-        hide2.setPreferredWidth(0);
-        TableColumn hide5 = jTable1.getColumnModel().getColumn(5);
-        hide5.setMinWidth(0);
-        hide5.setMaxWidth(0);
-        hide5.setPreferredWidth(0);
-        TableColumn hide12 = jTable1.getColumnModel().getColumn(12);
-        hide12.setMinWidth(0);
-        hide12.setMaxWidth(0);
-        hide12.setPreferredWidth(0);
-        TableColumn hide13 = jTable1.getColumnModel().getColumn(13);
-        hide13.setMinWidth(0);
-        hide13.setMaxWidth(0);
-        hide13.setPreferredWidth(0);
-        TableColumn hide6 = jTable1.getColumnModel().getColumn(18);
-        hide6.setMinWidth(0);
-        hide6.setMaxWidth(0);
-        hide6.setPreferredWidth(0);
 
-//"STOCK IN ID", "UNIT", "PRODUCT", "QUANTITY", "PRICE", "LINE TOTAL"
-        TableColumn[] column = new TableColumn[100];
-        column[1] = jTable1.getColumnModel().getColumn(1);
-        column[1].setPreferredWidth(30);
-        
-        column[2] = jTable1.getColumnModel().getColumn(2);
-        column[2].setPreferredWidth(30);
-        
-        column[3] = jTable1.getColumnModel().getColumn(3);
-        column[3].setPreferredWidth(30);
-        
-        column[4] = jTable1.getColumnModel().getColumn(4);
-        column[4].setPreferredWidth(30);
-        
-        column[5] = jTable1.getColumnModel().getColumn(5);
-        column[5].setPreferredWidth(30);
-        
-        column[6] = jTable1.getColumnModel().getColumn(6);
-        column[6].setPreferredWidth(40);
-        
-        column[7] = jTable1.getColumnModel().getColumn(7);
-        column[7].setPreferredWidth(30);
-        
-        column[8] = jTable1.getColumnModel().getColumn(8);
-        column[8].setPreferredWidth(40);
-        
-        column[9] = jTable1.getColumnModel().getColumn(9);
-        column[9].setPreferredWidth(40);
-        
-        column[10] = jTable1.getColumnModel().getColumn(10);
-        column[10].setPreferredWidth(80);
-        
-        column[11] = jTable1.getColumnModel().getColumn(11);
-        column[11].setPreferredWidth(80);
-        
-        column[14] = jTable1.getColumnModel().getColumn(14);
-        column[14].setPreferredWidth(30);
-        
-        column[16] = jTable1.getColumnModel().getColumn(16);
-        column[16].setPreferredWidth(50);
-        
-        column[17] = jTable1.getColumnModel().getColumn(17);
-        column[17].setPreferredWidth(50);
-        
-        column[19] = jTable1.getColumnModel().getColumn(19);
-        column[19].setPreferredWidth(30);
-        
     }
-    
-    static class CustomTableCellRenderer extends DefaultTableCellRenderer {
-        
-        @Override
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
-                boolean hasFocus, int row, int column) {
-            Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            if (value != null && value.equals("VACANT")) {
-                cell.setForeground(new Color(0, 100, 0));
-            } else if (value != null && value.equals("VACANT")) {
-                cell.setForeground(new Color(0, 100, 0));
-            } else if (value != null && value.equals("VACANT")) {
-                cell.setForeground(new Color(0, 100, 0));
-            } else {
-                // Set default foreground color for other values
-                cell.setForeground(table.getForeground());
-            }
-            return cell;
-        }
-        
-    }
-    
-    @Override
-    public void mouseClicked(MouseEvent e) {
-    }
-    
-    @Override
-    public void mousePressed(MouseEvent e) {
-    }
-    
-    @Override
-    public void mouseReleased(MouseEvent e) {
-    }
-    
-    @Override
-    public void mouseEntered(MouseEvent e) {
-    }
-    
-    @Override
-    public void mouseExited(MouseEvent e) {
-    }
-    
-    private RoomDAOImpl roomDAOImpl = new RoomDAOImpl();
-    private PaymentDAOImpl paymentDAOImpl = new PaymentDAOImpl();
-    private BookingDAOImpl bookingDAOImpl = new BookingDAOImpl();
-    private ArrayList<Room> roomList;
-    private ArrayList<Booking> bookingList;
-    
-    private void selectRoom() {
-        tableModel.setRowCount(0);
-        roomList = roomDAOImpl.selectRoom();
-        tableModel.setRowCount(0);
-        Boolean reserve = false;
-        for (Room r : roomList) {
-//            "DURATION", "CHECK-IN", "CHECK-OUT", "CHECK-IN UF", "PAID", "DOWN PAYMENT", "INSUFFICIENT", "REFUNDABLE","BILL ID"
-            Payment p = paymentDAOImpl.selectRoomBookingPayments(r.getId());
-            Booking bo = bookingDAOImpl.selectRoomBookingByRoomId(r.getId());
-//            if (bo.getReserve() != null) {
-//                reserve = true;
-//            }
-            if (bo.getCheckOut() == null) {
-                tableModel.addRow(new Object[]{r.getId(), r.getRoomType().getId(), r.getRoomStatus().getId(), r.getRoomNumber(), df.format(r.getPrice()), r.getPrice(), r.getRoomStatus().getStatus(), r.getRoomType().getType(), r.getRoomType().getCapacity()});
-            } else {
-                ArrayList<Booking> list = bookingDAOImpl.selectRoomBookingListByRoomId(r.getId());
-//                ArrayList<Payment> p = bookingDAOImpl.selectRoomBookingPaymentListByRoomId(r.getId());
-                int count = 1;
-                for (Booking b : list) {
-                    if (b.getReserve() != null) {
-                        reserve = true;
-                    }
-                    if (list.size() > 1) {
-                        if (b.getReserve() != null) {
-                            reserve = true;
-                        }
-                        if (count == 1) {
-                            tableModel.addRow(new Object[]{r.getId(), r.getRoomType().getId(), r.getRoomStatus().getId(), r.getRoomNumber(), df.format(r.getPrice()), r.getPrice(), r.getRoomStatus().getStatus(), r.getRoomType().getType(), r.getRoomType().getCapacity(),
-                                b.getRoomRate().getDuration().getDuration(), new StringToDate().convertStringToFormattedDate(b.getCheckIn()), new StringToDate().convertStringToFormattedDate(b.getCheckOut()), b.getCheckIn(), b.getCheckOut(),//2nd line
-                                df.format(b.getAmount()), df.format(b.getRoomRate().getDown_payment()), df.format((b.getRoomRate().getPrice() - b.getAmount())), df.format(b.getRoomRate().getRefundable()), b.getBill().getId(), reserve});
-                            reserve = false;
-                        } else {
-                            tableModel.addRow(new Object[]{r.getId(), r.getRoomType().getId(), r.getRoomStatus().getId(), "", "", "", "", "", "",
-                                b.getRoomRate().getDuration().getDuration(), new StringToDate().convertStringToFormattedDate(b.getCheckIn()), new StringToDate().convertStringToFormattedDate(b.getCheckOut()), b.getCheckIn(), b.getCheckOut(),//2nd line
-                                df.format(b.getAmount()), df.format(b.getRoomRate().getDown_payment()), df.format((b.getRoomRate().getPrice() - b.getAmount())), df.format(b.getRoomRate().getRefundable()), b.getBill().getId(), reserve});
-                            reserve = false;
-                        }
-                        count++;
-                    } else {
-                        tableModel.addRow(new Object[]{r.getId(), r.getRoomType().getId(), r.getRoomStatus().getId(), r.getRoomNumber(), df.format(r.getPrice()), r.getPrice(), r.getRoomStatus().getStatus(), r.getRoomType().getType(), r.getRoomType().getCapacity(),
-                            b.getRoomRate().getDuration().getDuration(), new StringToDate().convertStringToFormattedDate(b.getCheckIn()), new StringToDate().convertStringToFormattedDate(b.getCheckOut()), b.getCheckIn(), b.getCheckOut(),//2nd line
-                            df.format(b.getAmount()), df.format(b.getRoomRate().getDown_payment()), df.format((b.getRoomRate().getPrice() - b.getAmount())), df.format(b.getRoomRate().getRefundable()), b.getBill().getId(), reserve});
-                        reserve = false;
-                    }
-                    reserve = false;
-                }
-            }
-            
+
+    private void clearLoginCredentials() {
+        try {
+            preferences.remove(USERNAME_PREF_KEY);
+            preferences.remove(PASSWORD_PREF_KEY);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
-    
-    private void popUpMenu() {
-        JPopupMenu popupMenu = new JPopupMenu();
-        JMenuItem refreshItem = new JMenuItem("Refresh");
-        refreshItem.setIcon(new FlatSVGIcon("svg/search.svg", 16, 16));
-        JMenuItem reserveItem = new JMenuItem("Reserve");
-        reserveItem.setIcon(new FlatSVGIcon("svg/search.svg", 16, 16));
-        
-        popupMenu.add(refreshItem);
-        popupMenu.add(reserveItem);
-        jTable1.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                int r = jTable1.rowAtPoint(e.getPoint());
-                if (r >= 0 && r < jTable1.getRowCount()) {
-                    jTable1.setRowSelectionInterval(r, r);
-                } else {
-                    jTable1.clearSelection();
-                }
-                
-                int rowindex = jTable1.getSelectedRow();
-                if (rowindex < 0) {
-                    return;
-                }
-                if (e.isPopupTrigger() && e.getComponent() instanceof JTable) {
-                    popupMenu.show(e.getComponent(), e.getX(), e.getY());
-                }
+//
+
+    private void saveLoginCredentials() {
+        try {
+            UserDAOImpl userDAOImpl = new UserDAOImpl();
+            User user = new User();
+            String storedUsername = preferences.get(USERNAME_PREF_KEY, null);
+            String storedPassword = preferences.get(PASSWORD_PREF_KEY, null);
+            user.setUsername(storedUsername);
+            user.setPassword(storedPassword);
+            if (userDAOImpl.loginUser(user) != null) {
+                LoginUser logInUser = new LoginUser();
+                user = userDAOImpl.loginUser(user);
+                logInUser.setUser(user);
+                loginUser();
+                displayPicture(logInUser.getUser());
+                // login for jdialog
+            } else {
+                loginUser();
+                JDialogLogin logIn = new JDialogLogin(this, true);
+                logIn.setVisible(true);
+                loginUser();
             }
-        });
-        
-        refreshItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int selectedRow = jTable1.getSelectedRow();
-                if (selectedRow != -1) {
-                    selectRoom();
-                }
-            }
-        });
-        reserveItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int selectedRow = jTable1.getSelectedRow();
-                if (selectedRow != -1) {
-                    JDialogBooking booking = new JDialogBooking(JFrameHRMS.this, true);
-                    booking.setVisible(true);
-                    selectRoom();
-                }
-            }
-        });
+            addPanels();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-    
-    
-    
+
+    int IMG_WIDTH = 140;
+    int IMG_HEIGHT = 140;
+
+    private void displayPicture(User user) {
+        try {
+            byte[] imageData = user.getPhoto();
+            ImageIcon imageIcon = new ImageIcon(imageData);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private Image getCircleImage(Image img, int width, int height) {
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = image.createGraphics();
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        Ellipse2D.Double circle = new Ellipse2D.Double(0, 0, width, height);
+        g2.setClip(circle);
+        g2.drawImage(img, 0, 0, width, height, null);
+        g2.dispose();
+        return image;
+    }
+
+    private void addPanels() {
+        cardsPanel = new JPanel(cardLayout);
+        cardsPanel.add(panelDashboard, "Dashboard");
+//        cardsPanel.add(panelContent, "Content");
+    }
+
 }

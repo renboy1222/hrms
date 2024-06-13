@@ -3,7 +3,7 @@
  */
 package com.aldrin.hrms;
 
-import com.aldrin.hrms.gui.JFrameApp;
+import com.aldrin.hrms.gui.JFrameHRMS;
 import com.aldrin.hrms.gui.JFrameHRMS;
 import com.formdev.flatlaf.FlatLightLaf;
 import javax.swing.SwingUtilities;
@@ -28,8 +28,7 @@ public class Hrms {
             UIManager.put("Button.innerFocusWidth", 2);//JButton
 
             System.setProperty("flatlaf.menuBarEmbedded", "false");
-//        JFrameHRMS hrms = new JFrameHRMS();
-            JFrameApp hrms = new JFrameApp();
+            JFrameHRMS hrms = new JFrameHRMS();
             hrms.setVisible(true);
         });
     }

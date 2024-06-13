@@ -11,6 +11,7 @@ import com.aldrin.hrms.dao.impl.PaymentDAOImpl;
 import com.aldrin.hrms.dao.impl.RoomDAOImpl;
 import com.aldrin.hrms.dao.impl.RoomRateDAOImpl;
 import com.aldrin.hrms.dao.impl.UserDAOImpl;
+import com.aldrin.hrms.gui.panel.JPanelDashboard;
 import com.aldrin.hrms.model.Bill;
 import com.aldrin.hrms.model.Booking;
 import com.aldrin.hrms.model.Customer;
@@ -37,6 +38,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
@@ -351,7 +353,9 @@ public class JDialogBooking extends javax.swing.JDialog implements MouseListener
 
                 booking.setRoomRate(roomRate);
                 booking.setCheckInDate(cInDate);
-                booking.setCheckOutDate(cOutDate);
+                booking.setCheckInDate(cOutDate);
+                booking.setCheckIn(checkInDate);
+                booking.setCheckOut(checkOutDate);
                 booking.setBill(bill);
                 if (reserve == true) {
                     bookDAOImpl.addBookingReserve(booking);
@@ -485,7 +489,8 @@ public class JDialogBooking extends javax.swing.JDialog implements MouseListener
         jTableBooking.setRowSorter(sorter);
         jTableBooking.addMouseListener(this);
 
-        jTableBooking.setDefaultRenderer(Object.class, new JFrameHRMS.CustomTableCellRenderer());
+//        jTableBooking.setDefaultRenderer(Object.class, new JPanelDashboard.CustomTableCellRenderer());
+        jTableBooking.setDefaultRenderer(Object.class, new JDialogBooking.CustomTableCellRenderer());
         jScrollPane1.setViewportView(jTableBooking);
         TableColumn hide0 = jTableBooking.getColumnModel().getColumn(0);
         hide0.setMinWidth(0);
@@ -536,6 +541,27 @@ public class JDialogBooking extends javax.swing.JDialog implements MouseListener
 
         column[11] = jTableBooking.getColumnModel().getColumn(11);
         column[11].setPreferredWidth(30);
+
+    }
+
+    static class CustomTableCellRenderer extends DefaultTableCellRenderer {
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+                boolean hasFocus, int row, int column) {
+            Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            if (value != null && value.equals("VACANT")) {
+                cell.setForeground(new Color(0, 100, 0));
+            } else if (value != null && value.equals("VACANT")) {
+                cell.setForeground(new Color(0, 100, 0));
+            } else if (value != null && value.equals("VACANT")) {
+                cell.setForeground(new Color(0, 100, 0));
+            } else {
+                // Set default foreground color for other values
+                cell.setForeground(table.getForeground());
+            }
+            return cell;
+        }
 
     }
 

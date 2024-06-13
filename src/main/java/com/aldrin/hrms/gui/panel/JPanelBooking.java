@@ -7,6 +7,7 @@ package com.aldrin.hrms.gui.panel;
 import com.aldrin.hrms.dao.impl.BookingDAOImpl;
 import com.aldrin.hrms.dao.impl.PaymentDAOImpl;
 import com.aldrin.hrms.dao.impl.RoomDAOImpl;
+import com.aldrin.hrms.gui.JDialogBooking;
 import com.aldrin.hrms.gui.JFrameHRMS;
 import com.aldrin.hrms.model.Booking;
 import com.aldrin.hrms.model.Payment;
@@ -43,21 +44,21 @@ import javax.swing.table.TableRowSorter;
  *
  * @author Java Programming with Aldrin
  */
-public class JPanelDashboard extends javax.swing.JPanel implements MouseListener {
+public class JPanelBooking extends javax.swing.JPanel implements MouseListener{
 
     /**
-     * Creates new form JPanelDashboard
+     * Creates new form JPanelContent
      */
     private DecimalFormat df = new DecimalFormat("##,##0.00");
-
-    public JPanelDashboard() {
+    private JFrameHRMS jFrameHRMS;
+    public JPanelBooking(JFrameHRMS jFrameHRMS) {
         initComponents();
+        this.jFrameHRMS =jFrameHRMS;
         jTextFieldSearch.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Search");
         jTextFieldSearch.putClientProperty(FlatClientProperties.TEXT_FIELD_LEADING_ICON, new FlatSVGIcon("svg/search.svg", 24, 24));
         setTable();
         selectRoom();
         popUpMenu();
-
     }
 
     /**
@@ -79,6 +80,9 @@ public class JPanelDashboard extends javax.swing.JPanel implements MouseListener
         jTable1 = new javax.swing.JTable();
         jPanel7 = new javax.swing.JPanel();
         jPanel8 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
+        jPanel15 = new javax.swing.JPanel();
         jPanel9 = new javax.swing.JPanel();
         jPanel10 = new javax.swing.JPanel();
         jPanel11 = new javax.swing.JPanel();
@@ -92,7 +96,7 @@ public class JPanelDashboard extends javax.swing.JPanel implements MouseListener
         jPanel4.setPreferredSize(new java.awt.Dimension(940, 40));
         jPanel4.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 10, 10));
 
-        jLabel2.setText("Channel Dashboard");
+        jLabel2.setText("Booking");
         jPanel4.add(jLabel2);
 
         add(jPanel4, java.awt.BorderLayout.NORTH);
@@ -128,7 +132,7 @@ public class JPanelDashboard extends javax.swing.JPanel implements MouseListener
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1098, Short.MAX_VALUE)
+            .addGap(0, 967, Short.MAX_VALUE)
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -137,7 +141,38 @@ public class JPanelDashboard extends javax.swing.JPanel implements MouseListener
 
         jPanel5.add(jPanel7, java.awt.BorderLayout.NORTH);
 
-        jPanel8.setPreferredSize(new java.awt.Dimension(1252, 10));
+        jPanel8.setPreferredSize(new java.awt.Dimension(1252, 50));
+        jPanel8.setLayout(new java.awt.BorderLayout());
+
+        jPanel2.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 1, 5));
+
+        jButton1.setText("<html><center><b>Add<br>Booking</center></html>");
+        jButton1.setMargin(new java.awt.Insets(2, 2, 2, 2));
+        jButton1.setPreferredSize(new java.awt.Dimension(75, 42));
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel2.add(jButton1);
+
+        jPanel8.add(jPanel2, java.awt.BorderLayout.CENTER);
+
+        jPanel15.setPreferredSize(new java.awt.Dimension(10, 50));
+
+        javax.swing.GroupLayout jPanel15Layout = new javax.swing.GroupLayout(jPanel15);
+        jPanel15.setLayout(jPanel15Layout);
+        jPanel15Layout.setHorizontalGroup(
+            jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 10, Short.MAX_VALUE)
+        );
+        jPanel15Layout.setVerticalGroup(
+            jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 50, Short.MAX_VALUE)
+        );
+
+        jPanel8.add(jPanel15, java.awt.BorderLayout.WEST);
+
         jPanel5.add(jPanel8, java.awt.BorderLayout.SOUTH);
 
         jPanel9.setPreferredSize(new java.awt.Dimension(10, 503));
@@ -150,7 +185,7 @@ public class JPanelDashboard extends javax.swing.JPanel implements MouseListener
         );
         jPanel9Layout.setVerticalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 462, Short.MAX_VALUE)
+            .addGap(0, 317, Short.MAX_VALUE)
         );
 
         jPanel5.add(jPanel9, java.awt.BorderLayout.EAST);
@@ -165,7 +200,7 @@ public class JPanelDashboard extends javax.swing.JPanel implements MouseListener
         );
         jPanel10Layout.setVerticalGroup(
             jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 462, Short.MAX_VALUE)
+            .addGap(0, 317, Short.MAX_VALUE)
         );
 
         jPanel5.add(jPanel10, java.awt.BorderLayout.WEST);
@@ -233,8 +268,15 @@ public class JPanelDashboard extends javax.swing.JPanel implements MouseListener
         }
     }//GEN-LAST:event_jTextFieldSearchKeyReleased
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        JDialogBooking booking = new JDialogBooking(jFrameHRMS, true);
+        booking.setVisible(true);
+        selectRoom();        
+    }//GEN-LAST:event_jButton1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
@@ -242,6 +284,8 @@ public class JPanelDashboard extends javax.swing.JPanel implements MouseListener
     private javax.swing.JPanel jPanel12;
     private javax.swing.JPanel jPanel13;
     private javax.swing.JPanel jPanel14;
+    private javax.swing.JPanel jPanel15;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
@@ -254,7 +298,7 @@ public class JPanelDashboard extends javax.swing.JPanel implements MouseListener
     private javax.swing.JTextField jTextFieldSearch;
     // End of variables declaration//GEN-END:variables
 
-//    ""ID", "TYPE ID", "STATUS ID", "ROOM NUMBER", "PRICE", "PRICE UF", "STATUS", "TYPE", "CAPACITY"" 0-8
+    //    ""ID", "TYPE ID", "STATUS ID", "ROOM NUMBER", "PRICE", "PRICE UF", "STATUS", "TYPE", "CAPACITY"" 0-8
 //    "CHECK-IN","CHECK-OUT","CUSTOMER","PAYMENT" 9-12 BOOK
 //    "CHECK-IN","CHECK-OUT","CUSTOMER","DOWN PAYMENT" 13-16 RESERVATION
     public DefaultTableModel tableModel = new DefaultTableModel(new Object[]{"ID", "TYPE ID", "STATUS ID", "ROOM #", "PRICE", "PRICE UF", "STATUS", "TYPE", "CAPACITY",

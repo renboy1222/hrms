@@ -48,10 +48,8 @@ INSERT INTO `booking` (
 VALUES
   (?,?,?,?) ;
                                                                       """);
-            String checkInDate = new StringToDate().convertDateToString(booking.getCheckInDate());
-            String checkOutDate = new StringToDate().convertDateToString(booking.getCheckOutDate());
-            ps.setString(1, checkInDate);
-            ps.setString(2, checkOutDate);
+            ps.setString(1, booking.getCheckIn());
+            ps.setString(2, booking.getCheckOut());
             ps.setLong(3, booking.getRoomRate().getId());
             ps.setLong(4, booking.getBill().getId());
             ps.execute();
@@ -77,10 +75,8 @@ INSERT INTO `booking` (
 VALUES
   (?,?,CURRENT_TIMESTAMP(),?,?) ;
                                                                       """);
-            String checkInDate = new StringToDate().convertDateToString(booking.getCheckInDate());
-            String checkOutDate = new StringToDate().convertDateToString(booking.getCheckOutDate());
-            ps.setString(1, checkInDate);
-            ps.setString(2, checkOutDate);
+            ps.setString(1, booking.getCheckIn());
+            ps.setString(2, booking.getCheckOut());
             ps.setLong(3, booking.getRoomRate().getId());
             ps.setLong(4, booking.getBill().getId());
             ps.execute();
