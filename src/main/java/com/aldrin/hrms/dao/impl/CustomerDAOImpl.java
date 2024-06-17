@@ -101,7 +101,7 @@ WHERE `customer_id` = ?
         try {
             String query = """
 SELECT 
-  `customer_id`,
+  `id`,
   `address`,
   `email`,
   `name`,
@@ -114,7 +114,7 @@ FROM
             ResultSet rs = st.executeQuery(query);
             while (rs.next()) {
                 Customer c = new Customer();
-                c.setId(rs.getLong("CUSTOMER_ID"));
+                c.setId(rs.getLong("ID"));
                 c.setAddress(rs.getString("ADDRESS"));
                 c.setEmail(rs.getString("EMAIL"));
                 c.setName(rs.getString("NAME"));

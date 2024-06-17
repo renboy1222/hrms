@@ -63,8 +63,8 @@
         <Container class="javax.swing.JPanel" name="jPanel2">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="General">
-                <Property name="tabTitle" type="java.lang.String" value="General"/>
+              <JTabbedPaneConstraints tabName="Customer">
+                <Property name="tabTitle" type="java.lang.String" value="Customer"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
@@ -104,8 +104,8 @@
         <Container class="javax.swing.JPanel" name="jPanel3">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="Channel">
-                <Property name="tabTitle" type="java.lang.String" value="Channel"/>
+              <JTabbedPaneConstraints tabName="Room">
+                <Property name="tabTitle" type="java.lang.String" value="Room"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
@@ -113,7 +113,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="834" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="851" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -126,8 +126,8 @@
         <Container class="javax.swing.JPanel" name="jPanel5">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="Upload Defaults">
-                <Property name="tabTitle" type="java.lang.String" value="Upload Defaults"/>
+              <JTabbedPaneConstraints tabName="Room Rate">
+                <Property name="tabTitle" type="java.lang.String" value="Room Rate"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
@@ -135,7 +135,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="834" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="851" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -148,8 +148,8 @@
         <Container class="javax.swing.JPanel" name="jPanel6">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="Permissions">
-                <Property name="tabTitle" type="java.lang.String" value="Permissions"/>
+              <JTabbedPaneConstraints tabName="Room Type">
+                <Property name="tabTitle" type="java.lang.String" value="Room Type"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
@@ -157,7 +157,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="834" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="851" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -170,8 +170,8 @@
         <Container class="javax.swing.JPanel" name="jPanel1">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="Community">
-                <Property name="tabTitle" type="java.lang.String" value="Community"/>
+              <JTabbedPaneConstraints tabName="Room Status">
+                <Property name="tabTitle" type="java.lang.String" value="Room Status"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
@@ -179,7 +179,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="834" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="851" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -192,8 +192,8 @@
         <Container class="javax.swing.JPanel" name="jPanel9">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="Agreements">
-                <Property name="tabTitle" type="java.lang.String" value="Agreements"/>
+              <JTabbedPaneConstraints tabName="Storey">
+                <Property name="tabTitle" type="java.lang.String" value="Storey"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
@@ -201,7 +201,29 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="834" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="851" max="32767" attributes="0"/>
+              </Group>
+            </DimensionLayout>
+            <DimensionLayout dim="1">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <EmptySpace min="0" pref="401" max="32767" attributes="0"/>
+              </Group>
+            </DimensionLayout>
+          </Layout>
+        </Container>
+        <Container class="javax.swing.JPanel" name="jPanel10">
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
+              <JTabbedPaneConstraints tabName="Duration">
+                <Property name="tabTitle" type="java.lang.String" value="Duration"/>
+              </JTabbedPaneConstraints>
+            </Constraint>
+          </Constraints>
+
+          <Layout>
+            <DimensionLayout dim="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <EmptySpace min="0" pref="851" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">

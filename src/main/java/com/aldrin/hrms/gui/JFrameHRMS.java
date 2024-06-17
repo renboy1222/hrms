@@ -6,7 +6,15 @@ package com.aldrin.hrms.gui;
 
 import com.aldrin.hrms.Hrms;
 import com.aldrin.hrms.dao.impl.UserDAOImpl;
-import com.aldrin.hrms.gui.panel.JPanelAnalytics;
+import com.aldrin.hrms.gui.dialog.JDialogChangePassword;
+import com.aldrin.hrms.gui.dialog.JDialogCustomer;
+import com.aldrin.hrms.gui.dialog.JDialogRoom;
+import com.aldrin.hrms.gui.dialog.JDialogRoomRate;
+import com.aldrin.hrms.gui.dialog.JDialogRoomStatus;
+import com.aldrin.hrms.gui.dialog.JDialogRoomType;
+import com.aldrin.hrms.gui.dialog.JDialogStorey;
+import com.aldrin.hrms.gui.dialog.JDialogUser;
+import com.aldrin.hrms.gui.panel.JPanelReports;
 import com.aldrin.hrms.gui.panel.JPanelSales;
 import com.aldrin.hrms.gui.panel.JPanelBooking;
 import com.aldrin.hrms.gui.panel.JPanelDashboard;
@@ -20,11 +28,19 @@ import java.awt.CardLayout;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.util.prefs.Preferences;
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 
 /**
  *
@@ -41,14 +57,21 @@ public class JFrameHRMS extends javax.swing.JFrame {
     private CardLayout cardLayout = new CardLayout();
     private JPanel cardsPanel = new JPanel(cardLayout);
     JPanelDashboard panelDashboard = new JPanelDashboard();
-    JPanelBooking panelContent = new JPanelBooking(this);
-    JPanelSales panelComments = new JPanelSales();
-    JPanelAnalytics panelAnalytics = new JPanelAnalytics();
+    JPanelBooking panelBooking = new JPanelBooking(this);
+    JPanelSales panelSales = new JPanelSales();
+    JPanelReports panelReports = new JPanelReports();
     JPanelSettings panelSettings = new JPanelSettings();
+
+    JMenuItem menuItemLogin = new JMenuItem("Login");
+    JMenuItem menuItemLogout = new JMenuItem("Logout");
+    JMenuItem menuItemChangePassword = new JMenuItem("Change Password");
+    JMenuItem menuItemUser = new JMenuItem("Storey");
 
     /**
      * Creates new form JFrameApp
      */
+    private JFrameHRMS jFrameHRMS;
+
     public JFrameHRMS() {
         initComponents();
 //        Font newFont = fontSize16.deriveFont(16);
@@ -59,17 +82,25 @@ public class JFrameHRMS extends javax.swing.JFrame {
         setVisible(true);
         String storedUsername = preferences.get(USERNAME_PREF_KEY, null);
         String storedPassword = preferences.get(PASSWORD_PREF_KEY, null);
-        jMenuItemLogout.setVisible(false);
         loginUser.setUser(null);
 
         saveLoginCredentials();
 
         cardsPanel.add(panelDashboard, "Dashboard");
-        cardsPanel.add(panelContent, "Booking");
-        cardsPanel.add(panelComments, "Comments");
-        cardsPanel.add(panelAnalytics, "Analytics");
+        cardsPanel.add(panelBooking, "Booking");
+        cardsPanel.add(panelSales, "Sales");
+        cardsPanel.add(panelReports, "Reports");
         cardsPanel.add(panelSettings, "Settings");
         jPanel2.add(cardsPanel, BorderLayout.CENTER);
+        this.jFrameHRMS = this;
+        popUpMenuSettings();
+        popUpMenuUser();
+
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent we) {
+                quitApp();
+            }
+        });
 
     }
 
@@ -86,23 +117,13 @@ public class JFrameHRMS extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jPanelSideBarButtons = new javax.swing.JPanel();
-        jButtonDashboard = new javax.swing.JButton();
-        jButtonContent = new javax.swing.JButton();
-        jButtonComments = new javax.swing.JButton();
-        jButtonAnalytics = new javax.swing.JButton();
+        jButtonBooking = new javax.swing.JButton();
+        jButtonSales = new javax.swing.JButton();
+        jButtonReports = new javax.swing.JButton();
         jButtonSettings = new javax.swing.JButton();
+        jButtonUser = new javax.swing.JButton();
         jPanel7 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
-        jMenuBar1 = new javax.swing.JMenuBar();
-        jMenuApp = new javax.swing.JMenu();
-        jMenuItemLogin = new javax.swing.JMenuItem();
-        jMenuItemLogout = new javax.swing.JMenuItem();
-        jSeparator1 = new javax.swing.JPopupMenu.Separator();
-        jMenuItem2 = new javax.swing.JMenuItem();
-        jMenuSettings = new javax.swing.JMenu();
-        jMenuItem3 = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Remember me Login App");
@@ -122,59 +143,46 @@ public class JFrameHRMS extends javax.swing.JFrame {
         jPanelSideBarButtons.setPreferredSize(new java.awt.Dimension(10, 160));
         jPanelSideBarButtons.setLayout(new java.awt.GridLayout(0, 1));
 
-        jButtonDashboard.setIcon(new FlatSVGIcon("svg/dashboard.svg",16,16));
-        jButtonDashboard.setText("Dashboard");
-        jButtonDashboard.setBorder(null);
-        jButtonDashboard.setBorderPainted(false);
-        jButtonDashboard.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jButtonDashboard.setMargin(new java.awt.Insets(2, 5, 2, 0));
-        jButtonDashboard.addActionListener(new java.awt.event.ActionListener() {
+        jButtonBooking.setIcon(new FlatSVGIcon("svg/book.svg",24,24));
+        jButtonBooking.setText("Booking");
+        jButtonBooking.setBorder(null);
+        jButtonBooking.setBorderPainted(false);
+        jButtonBooking.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jButtonBooking.setMargin(new java.awt.Insets(2, 5, 2, 0));
+        jButtonBooking.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonDashboardActionPerformed(evt);
+                jButtonBookingActionPerformed(evt);
             }
         });
-        jPanelSideBarButtons.add(jButtonDashboard);
+        jPanelSideBarButtons.add(jButtonBooking);
 
-        jButtonContent.setIcon(new FlatSVGIcon("svg/content.svg",16,16));
-        jButtonContent.setText("Booking");
-        jButtonContent.setBorder(null);
-        jButtonContent.setBorderPainted(false);
-        jButtonContent.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jButtonContent.setMargin(new java.awt.Insets(2, 5, 2, 0));
-        jButtonContent.addActionListener(new java.awt.event.ActionListener() {
+        jButtonSales.setIcon(new FlatSVGIcon("svg/sale.svg",26,26));
+        jButtonSales.setText("Sales");
+        jButtonSales.setBorder(null);
+        jButtonSales.setBorderPainted(false);
+        jButtonSales.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jButtonSales.setMargin(new java.awt.Insets(2, 5, 2, 0));
+        jButtonSales.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonContentActionPerformed(evt);
+                jButtonSalesActionPerformed(evt);
             }
         });
-        jPanelSideBarButtons.add(jButtonContent);
+        jPanelSideBarButtons.add(jButtonSales);
 
-        jButtonComments.setIcon(new FlatSVGIcon("svg/comments.svg",16,16));
-        jButtonComments.setText("Sales");
-        jButtonComments.setBorder(null);
-        jButtonComments.setBorderPainted(false);
-        jButtonComments.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jButtonComments.setMargin(new java.awt.Insets(2, 5, 2, 0));
-        jButtonComments.addActionListener(new java.awt.event.ActionListener() {
+        jButtonReports.setIcon(new FlatSVGIcon("svg/report.svg",24,24));
+        jButtonReports.setText("Reports");
+        jButtonReports.setBorder(null);
+        jButtonReports.setBorderPainted(false);
+        jButtonReports.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jButtonReports.setMargin(new java.awt.Insets(2, 5, 2, 0));
+        jButtonReports.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonCommentsActionPerformed(evt);
+                jButtonReportsActionPerformed(evt);
             }
         });
-        jPanelSideBarButtons.add(jButtonComments);
+        jPanelSideBarButtons.add(jButtonReports);
 
-        jButtonAnalytics.setIcon(new FlatSVGIcon("svg/analytics.svg",16,16));
-        jButtonAnalytics.setText("Analytics");
-        jButtonAnalytics.setBorder(null);
-        jButtonAnalytics.setBorderPainted(false);
-        jButtonAnalytics.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jButtonAnalytics.setMargin(new java.awt.Insets(2, 5, 2, 0));
-        jButtonAnalytics.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonAnalyticsActionPerformed(evt);
-            }
-        });
-        jPanelSideBarButtons.add(jButtonAnalytics);
-
-        jButtonSettings.setIcon(new FlatSVGIcon("svg/settings.svg",16,16));
+        jButtonSettings.setIcon(new FlatSVGIcon("svg/settings.svg",24,24));
         jButtonSettings.setText("Settings");
         jButtonSettings.setBorder(null);
         jButtonSettings.setBorderPainted(false);
@@ -186,6 +194,19 @@ public class JFrameHRMS extends javax.swing.JFrame {
             }
         });
         jPanelSideBarButtons.add(jButtonSettings);
+
+        jButtonUser.setIcon(new FlatSVGIcon("svg/user.svg",24,24));
+        jButtonUser.setText("User");
+        jButtonUser.setBorder(null);
+        jButtonUser.setBorderPainted(false);
+        jButtonUser.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jButtonUser.setMargin(new java.awt.Insets(2, 5, 2, 0));
+        jButtonUser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonUserActionPerformed(evt);
+            }
+        });
+        jPanelSideBarButtons.add(jButtonUser);
 
         jPanel4.add(jPanelSideBarButtons, java.awt.BorderLayout.NORTH);
 
@@ -202,151 +223,91 @@ public class JFrameHRMS extends javax.swing.JFrame {
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
 
-        jMenuApp.setText("App");
-
-        jMenuItemLogin.setText("Login");
-        jMenuItemLogin.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemLoginActionPerformed(evt);
-            }
-        });
-        jMenuApp.add(jMenuItemLogin);
-
-        jMenuItemLogout.setText("Logout");
-        jMenuItemLogout.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemLogoutActionPerformed(evt);
-            }
-        });
-        jMenuApp.add(jMenuItemLogout);
-        jMenuApp.add(jSeparator1);
-
-        jMenuItem2.setText("Exit");
-        jMenuApp.add(jMenuItem2);
-
-        jMenuBar1.add(jMenuApp);
-
-        jMenuSettings.setText("Settings");
-
-        jMenuItem3.setText("User");
-        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem3ActionPerformed(evt);
-            }
-        });
-        jMenuSettings.add(jMenuItem3);
-
-        jMenuBar1.add(jMenuSettings);
-
-        jMenu2.setText("Help");
-
-        jMenuItem1.setText("About");
-        jMenu2.add(jMenuItem1);
-
-        jMenuBar1.add(jMenu2);
-
-        setJMenuBar(jMenuBar1);
-
-        setSize(new java.awt.Dimension(1287, 580));
+        setSize(new java.awt.Dimension(1250, 580));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jMenuItemLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemLoginActionPerformed
-        JDialogLogin login = new JDialogLogin(this, true);
-        login.setVisible(true);
-        loginUser();
-    }//GEN-LAST:event_jMenuItemLoginActionPerformed
-
-    private void jMenuItemLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemLogoutActionPerformed
-        jPanelSideBarButtons.setVisible(false);
-        cardsPanel.setVisible(false);
-        clearLoginCredentials();
-        loginUser.setUser(null);
-        loginUser();
-        JDialogLogin login = new JDialogLogin(this, true);
-        login.setVisible(true);
-        loginUser();
-    }//GEN-LAST:event_jMenuItemLogoutActionPerformed
-
-    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-
-    }//GEN-LAST:event_jMenuItem3ActionPerformed
-
     private void jButtonSettingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSettingsActionPerformed
-        cardLayout.show(cardsPanel, "Settings");
+//        cardLayout.show(cardsPanel, "Settings");
     }//GEN-LAST:event_jButtonSettingsActionPerformed
 
-    private void jButtonDashboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDashboardActionPerformed
-
-        cardLayout.show(cardsPanel, "Dashboard");
-
-    }//GEN-LAST:event_jButtonDashboardActionPerformed
-
-    private void jButtonContentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonContentActionPerformed
+    private void jButtonBookingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBookingActionPerformed
         cardLayout.show(cardsPanel, "Booking");
-    }//GEN-LAST:event_jButtonContentActionPerformed
+    }//GEN-LAST:event_jButtonBookingActionPerformed
 
-    private void jButtonCommentsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCommentsActionPerformed
-        cardLayout.show(cardsPanel, "Comments");
-    }//GEN-LAST:event_jButtonCommentsActionPerformed
+    private void jButtonSalesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalesActionPerformed
+        cardLayout.show(cardsPanel, "Sales");
+    }//GEN-LAST:event_jButtonSalesActionPerformed
 
-    private void jButtonAnalyticsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAnalyticsActionPerformed
-        cardLayout.show(cardsPanel, "Analytics");
-    }//GEN-LAST:event_jButtonAnalyticsActionPerformed
+    private void jButtonReportsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReportsActionPerformed
+        cardLayout.show(cardsPanel, "Reports");
+    }//GEN-LAST:event_jButtonReportsActionPerformed
+
+    private void jButtonUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonUserActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonUserActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButtonAnalytics;
-    private javax.swing.JButton jButtonComments;
-    private javax.swing.JButton jButtonContent;
-    private javax.swing.JButton jButtonDashboard;
+    private javax.swing.JButton jButtonBooking;
+    private javax.swing.JButton jButtonReports;
+    private javax.swing.JButton jButtonSales;
     private javax.swing.JButton jButtonSettings;
-    private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenu jMenuApp;
-    private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JMenuItem jMenuItemLogin;
-    private javax.swing.JMenuItem jMenuItemLogout;
-    private javax.swing.JMenu jMenuSettings;
+    private javax.swing.JButton jButtonUser;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanelSideBarButtons;
-    private javax.swing.JPopupMenu.Separator jSeparator1;
     // End of variables declaration//GEN-END:variables
 private void loginUser() {
         if (loginUser.getUser() != null) {
 //            login 
             cardsPanel.setVisible(true);
-            cardsPanel.add(panelDashboard, "Dashboard");
-//            cardsPanel.add(panelContent, "Booking");
-            cardsPanel.add(panelComments, "Sales");
-            cardsPanel.add(panelAnalytics, "Analytics");
+            cardsPanel.add(panelBooking, "Booking");
+            cardsPanel.add(panelSales, "Sales");
+            cardsPanel.add(panelReports, "Reports");
             cardsPanel.add(panelSettings, "Settings");
             jPanel2.add(cardsPanel, BorderLayout.CENTER);
-            jMenuApp.setText(loginUser.getUser().getSurname() + ", " + loginUser.getUser().getFirstname());
-            jMenuItemLogout.setVisible(true);
-            jMenuItemLogin.setVisible(false);
             jPanelSideBarButtons.setVisible(true);
             displayPicture(loginUser.getUser());
             if (loginUser.getUser().getRole().getRole().equals("ADMIN")) {
-                jMenuSettings.setVisible(true);
-                jButtonSettings.setEnabled(true);
+//                jButtonSettings.setEnabled(true);
+                menuItemUser.setVisible(true);
+
             } else if (loginUser.getUser().getRole().getRole().equals("USER")) {
-                jMenuSettings.setVisible(false);
-                jButtonSettings.setEnabled(false);
+//                jButtonSettings.setEnabled(false);
+                menuItemUser.setVisible(false);
             }
+            jPanelSideBarButtons.add(jButtonBooking);
+            jPanelSideBarButtons.add(jButtonSales);
+            jPanelSideBarButtons.add(jButtonReports);
+            jPanelSideBarButtons.add(jButtonSettings);
+            jPanelSideBarButtons.add(jButtonUser);
+            jButtonBooking.setVisible(true);
+            jButtonReports.setVisible(true);
+            jButtonSales.setVisible(true);
+            jButtonSettings.setVisible(true);
+            menuItemLogin.setVisible(false);
+            menuItemLogout.setVisible(true);
+            menuItemChangePassword.setVisible(true);
         } else {
 //            logout
-            jMenuApp.setText("App");
-            jMenuItemLogout.setVisible(false);
-            jMenuSettings.setVisible(false);
-            jMenuItemLogin.setVisible(true);
-            jPanelSideBarButtons.setVisible(false);
+            jPanelSideBarButtons.removeAll();
+            jPanelSideBarButtons.setVisible(true);
+            jPanelSideBarButtons.add(jButtonUser);
+            jPanelSideBarButtons.add(jButtonBooking);
+            jPanelSideBarButtons.add(jButtonSales);
+            jPanelSideBarButtons.add(jButtonReports);
+            jPanelSideBarButtons.add(jButtonSettings);
+            jButtonBooking.setVisible(false);
+            jButtonReports.setVisible(false);
+            jButtonSales.setVisible(false);
+            jButtonSettings.setVisible(false);
+            menuItemLogin.setVisible(true);
+            menuItemLogout.setVisible(false);
+            menuItemChangePassword.setVisible(false);
 
         }
 
@@ -416,7 +377,179 @@ private void loginUser() {
     private void addPanels() {
         cardsPanel = new JPanel(cardLayout);
         cardsPanel.add(panelDashboard, "Dashboard");
-//        cardsPanel.add(panelContent, "Content");
+//        cardsPanel.add(panelBooking, "Content");
     }
 
+    private void popUpMenuSettings() {
+        // Create a popup menu
+        JPopupMenu popupMenu = new JPopupMenu();
+
+        // Create and add menu items to the popup menu
+        JMenuItem menuItemCustomer = new JMenuItem("Customer");
+        menuItemCustomer.setIcon(new FlatSVGIcon("svg/customer.svg", 24, 24));
+        JMenuItem menuItemRoom = new JMenuItem("Room");
+        menuItemRoom.setIcon(new FlatSVGIcon("svg/room.svg", 24, 24));
+        JMenuItem menuItemRoomRate = new JMenuItem("Room rate");
+        menuItemRoomRate.setIcon(new FlatSVGIcon("svg/rate.svg", 24, 24));
+        JMenuItem menuItemRoomType = new JMenuItem("Room type");
+        menuItemRoomType.setIcon(new FlatSVGIcon("svg/type.svg", 24, 24));
+        JMenuItem menuItemRoomStatus = new JMenuItem("Room status");
+        menuItemRoomStatus.setIcon(new FlatSVGIcon("svg/status.svg", 24, 24));
+        JMenuItem menuItemStorey = new JMenuItem("Storey");
+        menuItemStorey.setIcon(new FlatSVGIcon("svg/storey.svg", 24, 24));
+        menuItemUser.setIcon(new FlatSVGIcon("svg/user.svg", 24, 24));
+
+        popupMenu.add(menuItemCustomer);
+        popupMenu.add(menuItemRoom);
+        popupMenu.add(menuItemRoomRate);
+        popupMenu.add(menuItemRoomType);
+        popupMenu.add(menuItemRoomStatus);
+        popupMenu.add(menuItemStorey);
+        popupMenu.add(menuItemUser);
+        
+
+        // Add action listeners to menu items
+        menuItemRoom.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JDialogRoom room = new JDialogRoom(jFrameHRMS, true);
+                room.setVisible(true);
+            }
+        });
+        menuItemRoomRate.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JDialogRoomRate roomRate = new JDialogRoomRate(jFrameHRMS, true);
+                roomRate.setVisible(true);
+            }
+        });
+        menuItemRoomType.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JDialogRoomType roomType = new JDialogRoomType(jFrameHRMS, true);
+                roomType.setVisible(true);
+            }
+        });
+        menuItemRoomStatus.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JDialogRoomStatus roomStatus = new JDialogRoomStatus(jFrameHRMS, true);
+                roomStatus.setVisible(true);
+            }
+        });
+
+        menuItemCustomer.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JDialogCustomer customer = new JDialogCustomer(jFrameHRMS, true);
+                customer.setVisible(true);
+            }
+        });
+
+        menuItemStorey.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JDialogStorey storey = new JDialogStorey(jFrameHRMS, true);
+                storey.setVisible(true);
+            }
+        });
+        
+        menuItemUser.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JDialogUser user = new JDialogUser(jFrameHRMS, true);
+                user.setVisible(true);
+            }
+        });
+
+        // Add an action listener to the button to show the popup menu
+        jButtonSettings.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Show the popup menu at the button's location
+                popupMenu.show(jButtonSettings, jButtonSettings.getWidth() / 2, jButtonSettings.getHeight() / 2);
+            }
+        });
+    }
+
+    private void popUpMenuUser() {
+        JPopupMenu popupMenu = new JPopupMenu();
+
+        // Create and add menu items to the popup menu
+        menuItemLogin.setIcon(new FlatSVGIcon("svg/login.svg", 24, 24));
+
+        menuItemLogout.setIcon(new FlatSVGIcon("svg/logout.svg", 24, 24));
+
+        menuItemChangePassword.setIcon(new FlatSVGIcon("svg/key.svg", 24, 24));
+        JMenuItem menuItemExit = new JMenuItem("Exit");
+        menuItemExit.setIcon(new FlatSVGIcon("svg/close.svg", 24, 24));
+
+        popupMenu.add(menuItemLogin);
+        popupMenu.add(menuItemLogout);
+        popupMenu.add(menuItemChangePassword);
+        popupMenu.add(menuItemExit);
+
+        // Add action listeners to menu items
+        menuItemLogout.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                jPanelSideBarButtons.setVisible(false);
+                cardsPanel.setVisible(false);
+                clearLoginCredentials();
+                loginUser.setUser(null);
+                loginUser();
+                JDialogLogin login = new JDialogLogin(jFrameHRMS, true);
+                login.setVisible(true);
+                loginUser();
+            }
+        });
+
+        menuItemLogin.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JDialogLogin login = new JDialogLogin(jFrameHRMS, true);
+                login.setVisible(true);
+                loginUser();
+            }
+        });
+
+        menuItemChangePassword.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JDialogChangePassword cp = new JDialogChangePassword(jFrameHRMS, true);
+                cp.setVisible(true);
+                cp.dispose();
+            }
+        });
+        menuItemExit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                quitApp();
+            }
+        });
+
+        // Add an action listener to the button to show the popup menu
+        jButtonUser.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Show the popup menu at the button's location
+                popupMenu.show(jButtonUser, jButtonUser.getWidth() / 2, jButtonUser.getHeight() / 2);
+            }
+        });
+    }
+
+    private void quitApp() {
+        try {
+            int reply = JOptionPane.showConfirmDialog(this,
+                    "Are you sure to exit Hotel Room Management application?",
+                    "Hotel Room Management - Exit", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
+            if (reply == JOptionPane.YES_OPTION) {
+                System.exit(0);        //Close the Application.
+            } else if (reply == JOptionPane.NO_OPTION) {
+                setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

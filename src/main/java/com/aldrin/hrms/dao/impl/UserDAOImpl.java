@@ -37,7 +37,7 @@ public class UserDAOImpl extends DBConnection implements UserDAO {
     public void addUser(User user) {
         try {
             getDBConn();
-            java.sql.PreparedStatement ps = getCon().prepareStatement("INSERT INTO USER (FIRSTNAME,SURNAME,USERNAME,PASSWORD,ROLE_ID,PHOTO,ACTIVE) VALUES  (?,?,?,?,?,?,?,?) ");
+            java.sql.PreparedStatement ps = getCon().prepareStatement("INSERT INTO USER (FIRSTNAME,SURNAME,USERNAME,PASSWORD,ROLE_ID,PHOTO,ACTIVE) VALUES  (?,?,?,?,?,?,?) ");
             ps.setString(1, user.getFirstname());
             ps.setString(2, user.getSurname());
             ps.setString(3, user.getUsername());
