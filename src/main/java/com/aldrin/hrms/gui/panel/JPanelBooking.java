@@ -44,16 +44,24 @@ import javax.swing.table.TableRowSorter;
  *
  * @author Java Programming with Aldrin
  */
-public class JPanelBooking extends javax.swing.JPanel implements MouseListener{
+public class JPanelBooking extends javax.swing.JPanel implements MouseListener {
 
     /**
      * Creates new form JPanelContent
      */
     private DecimalFormat df = new DecimalFormat("##,##0.00");
     private JFrameHRMS jFrameHRMS;
+    JPopupMenu popupMenu = new JPopupMenu();
+    JMenuItem itemCancel = new JMenuItem("Cancel");
+    JMenuItem itemBooking = new JMenuItem("Booking");
+    JMenuItem itemReserve = new JMenuItem("Reserve");
+    JMenuItem itemChangeRoom = new JMenuItem("Change Room");
+    JMenuItem itemViewDetails = new JMenuItem("View Details");
+    JMenuItem itemCheckIn = new JMenuItem("Check-in");
+
     public JPanelBooking(JFrameHRMS jFrameHRMS) {
         initComponents();
-        this.jFrameHRMS =jFrameHRMS;
+        this.jFrameHRMS = jFrameHRMS;
         jTextFieldSearch.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Search");
         jTextFieldSearch.putClientProperty(FlatClientProperties.TEXT_FIELD_LEADING_ICON, new FlatSVGIcon("svg/search.svg", 24, 24));
         setTable();
@@ -146,9 +154,10 @@ public class JPanelBooking extends javax.swing.JPanel implements MouseListener{
 
         jPanel2.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 1, 5));
 
+        jButton1.setIcon(new FlatSVGIcon("svg/user.svg",32,32));
         jButton1.setText("<html><center><b>Add<br>Booking</center></html>");
         jButton1.setMargin(new java.awt.Insets(2, 2, 2, 2));
-        jButton1.setPreferredSize(new java.awt.Dimension(75, 42));
+        jButton1.setPreferredSize(new java.awt.Dimension(100, 42));
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -271,7 +280,7 @@ public class JPanelBooking extends javax.swing.JPanel implements MouseListener{
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         JDialogBooking booking = new JDialogBooking(jFrameHRMS, true);
         booking.setVisible(true);
-        selectRoom();        
+        selectRoom();
     }//GEN-LAST:event_jButton1ActionPerformed
 
 
@@ -398,7 +407,7 @@ public class JPanelBooking extends javax.swing.JPanel implements MouseListener{
         header.addColumnGroup(g_name);
         header.addColumnGroup(g_lang);
         header.setPreferredSize(new Dimension(header.getPreferredSize().width, 40)); // Optional: Adjust header height
-        header.setBackground(new java.awt.Color(204, 204, 204));
+        header.setBackground(new java.awt.Color(70, 130, 180));
         jTable1.setRowSorter(sorter);
         jTable1.addMouseListener(this);
 
@@ -545,7 +554,6 @@ public class JPanelBooking extends javax.swing.JPanel implements MouseListener{
                 tableModel.addRow(new Object[]{r.getId(), r.getRoomType().getId(), r.getRoomStatus().getId(), r.getRoomNumber(), df.format(r.getPrice()), r.getPrice(), r.getRoomStatus().getStatus(), r.getRoomType().getType(), r.getRoomType().getCapacity()});
             } else {
                 ArrayList<Booking> list = bookingDAOImpl.selectRoomBookingListByRoomId(r.getId());
-//                ArrayList<Payment> p = bookingDAOImpl.selectRoomBookingPaymentListByRoomId(r.getId());
                 int count = 1;
                 for (Booking b : list) {
                     if (b.getReserve() != null) {
@@ -581,51 +589,76 @@ public class JPanelBooking extends javax.swing.JPanel implements MouseListener{
     }
 
     private void popUpMenu() {
-        JPopupMenu popupMenu = new JPopupMenu();
-        JMenuItem refreshItem = new JMenuItem("Refresh");
-        refreshItem.setIcon(new FlatSVGIcon("svg/search.svg", 16, 16));
-        JMenuItem reserveItem = new JMenuItem("Reserve");
-        reserveItem.setIcon(new FlatSVGIcon("svg/search.svg", 16, 16));
 
-        popupMenu.add(refreshItem);
-        popupMenu.add(reserveItem);
+        JMenuItem itemRefresh = new JMenuItem("Refresh");
+        itemRefresh.setIcon(new FlatSVGIcon("svg/refresh.svg", 16, 16));
+//        JMenuItem itemCancel = new JMenuItem("Cancel");
+        itemCancel.setIcon(new FlatSVGIcon("svg/cancel.svg", 16, 16));
+
+        for (int i = 0; i < jTable1.getRowCount(); i++) {
+
+//            Boolean reserve = (Boolean) jTable1.getValueAt(i, 19);
+//            System.out.println("reserve:"+reserve);
+//            if (reserve == null) {
+//                return;
+//            }else if (reserve == true) {
+//                popupMenu.add(itemCancel);
+//            } else {
+////                itemCancel.setVisible(false);
+//            }
+        }
+//        popupMenu.add(itemCancel);
         jTable1.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                int r = jTable1.rowAtPoint(e.getPoint());
-                if (r >= 0 && r < jTable1.getRowCount()) {
-                    jTable1.setRowSelectionInterval(r, r);
-                } else {
-                    jTable1.clearSelection();
-                }
-
-                int rowindex = jTable1.getSelectedRow();
-                if (rowindex < 0) {
-                    return;
-                }
                 if (e.isPopupTrigger() && e.getComponent() instanceof JTable) {
+                    int selectedRow = jTable1.getSelectedRow();
+                    Boolean reserve = (Boolean) jTable1.getValueAt(selectedRow, 19);
+                    popupMenu.removeAll();
+                    if (reserve == null) {
+                        popupMenu.removeAll();
+                        popupMenu.add(itemRefresh); 
+                        popupMenu.add(itemBooking);
+                        popupMenu.add(itemReserve);                 
+                    } else if (reserve.equals(Boolean.TRUE)) {
+                        popupMenu.add(itemRefresh);
+                        popupMenu.add(itemCancel);
+                        popupMenu.add(itemChangeRoom);
+                        popupMenu.add(itemViewDetails);
+                        popupMenu.add(itemCheckIn);
+                    } else if (reserve.equals(Boolean.FALSE)) {
+                        popupMenu.add(itemRefresh);
+                        popupMenu.add(itemViewDetails);
+                    }
                     popupMenu.show(e.getComponent(), e.getX(), e.getY());
+
                 }
             }
         });
 
-        refreshItem.addActionListener(new ActionListener() {
+        itemRefresh.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int selectedRow = jTable1.getSelectedRow();
-                if (selectedRow != -1) {
-                    selectRoom();
-                }
+//                int selectedRow = jTable1.getSelectedRow();
+//                if (selectedRow != -1) {
+                selectRoom();
+//                }
             }
         });
-        reserveItem.addActionListener(new ActionListener() {
+        itemCancel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int selectedRow = jTable1.getSelectedRow();
-                if (selectedRow != -1) {
-//                    JDialogBooking booking = new JDialogBooking(JFrameHRMS2.this, true);
-//                    booking.setVisible(true);
-                    selectRoom();
+                Boolean reserve = (Boolean) jTable1.getValueAt(selectedRow, 19);
+                popupMenu.removeAll();
+//                if (reserve == null) {
+//                    popupMenu.removeAll();
+//                } else
+                if (reserve.equals(Boolean.TRUE)) {
+                    popupMenu.add(itemRefresh);
+                    popupMenu.add(itemCancel);
+                } else if (reserve.equals(Boolean.FALSE)) {
+                    popupMenu.add(itemRefresh);
                 }
             }
         });

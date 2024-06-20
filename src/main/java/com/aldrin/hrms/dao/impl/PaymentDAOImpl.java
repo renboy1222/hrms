@@ -22,6 +22,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -268,4 +269,32 @@ WHERE `id` = ?;
         return list;
     }
     
+    
+   @Override
+    public Long getMaxId() {
+        Long maxId = null;
+        try {
+            getDBConn();
+            PreparedStatement statement = getCon().prepareStatement("SELECT \n"
+                    + "    MAX(PAYMENT.ID) AS ID  \n"
+                    + "FROM \n"
+                    + "    PAYMENT ");
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                Long idl = rs.getLong("ID");
+                if (idl == 0) {
+                    maxId = 1L;
+                } else {
+                    maxId = idl + 1;
+                }
+            }
+            rs.close();
+            statement.close();
+//            closeConnection();
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Opss...", JOptionPane.ERROR_MESSAGE);
+        }
+        return maxId;
+    }
 }

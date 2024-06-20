@@ -21,12 +21,20 @@ import com.aldrin.hrms.gui.panel.JPanelDashboard;
 import com.aldrin.hrms.gui.panel.JPanelSettings;
 import com.aldrin.hrms.model.User;
 import com.aldrin.hrms.util.LoginUser;
+import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLaf;
+import com.formdev.flatlaf.FlatLightLaf;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
+import java.awt.AlphaComposite;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Composite;
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -35,12 +43,18 @@ import java.awt.event.WindowEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.util.prefs.Preferences;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JToggleButton;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
@@ -56,7 +70,6 @@ public class JFrameHRMS extends javax.swing.JFrame {
 
     private CardLayout cardLayout = new CardLayout();
     private JPanel cardsPanel = new JPanel(cardLayout);
-    JPanelDashboard panelDashboard = new JPanelDashboard();
     JPanelBooking panelBooking = new JPanelBooking(this);
     JPanelSales panelSales = new JPanelSales();
     JPanelReports panelReports = new JPanelReports();
@@ -65,7 +78,7 @@ public class JFrameHRMS extends javax.swing.JFrame {
     JMenuItem menuItemLogin = new JMenuItem("Login");
     JMenuItem menuItemLogout = new JMenuItem("Logout");
     JMenuItem menuItemChangePassword = new JMenuItem("Change Password");
-    JMenuItem menuItemUser = new JMenuItem("Storey");
+    JMenuItem menuItemUser = new JMenuItem("User");
 
     /**
      * Creates new form JFrameApp
@@ -86,7 +99,6 @@ public class JFrameHRMS extends javax.swing.JFrame {
 
         saveLoginCredentials();
 
-        cardsPanel.add(panelDashboard, "Dashboard");
         cardsPanel.add(panelBooking, "Booking");
         cardsPanel.add(panelSales, "Sales");
         cardsPanel.add(panelReports, "Reports");
@@ -101,6 +113,8 @@ public class JFrameHRMS extends javax.swing.JFrame {
                 quitApp();
             }
         });
+        toggleIcon();
+        clickSideBarButton(jButtonBooking);
 
     }
 
@@ -123,10 +137,12 @@ public class JFrameHRMS extends javax.swing.JFrame {
         jButtonSettings = new javax.swing.JButton();
         jButtonUser = new javax.swing.JButton();
         jPanel7 = new javax.swing.JPanel();
+        jPanel5 = new javax.swing.JPanel();
+        jToggleButton1 = new javax.swing.JToggleButton(new FlatSVGIcon("svg/dark.svg",24,24));
         jPanel2 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Remember me Login App");
+        setTitle("HRMS - Hotel Room Management System");
 
         jPanel1.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 0, new java.awt.Color(102, 102, 102)));
         jPanel1.setLayout(new java.awt.BorderLayout());
@@ -211,7 +227,19 @@ public class JFrameHRMS extends javax.swing.JFrame {
         jPanel4.add(jPanelSideBarButtons, java.awt.BorderLayout.NORTH);
 
         jPanel7.setOpaque(false);
+        jPanel7.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
         jPanel4.add(jPanel7, java.awt.BorderLayout.CENTER);
+
+        jPanel5.setPreferredSize(new java.awt.Dimension(10, 50));
+        jPanel5.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+
+        jToggleButton1.setMargin(new java.awt.Insets(2, 2, 2, 2));
+        jToggleButton1.setMaximumSize(new java.awt.Dimension(60, 40));
+        jToggleButton1.setMinimumSize(new java.awt.Dimension(60, 40));
+        jToggleButton1.setPreferredSize(new java.awt.Dimension(30, 30));
+        jPanel5.add(jToggleButton1);
+
+        jPanel4.add(jPanel5, java.awt.BorderLayout.SOUTH);
 
         jPanel3.add(jPanel4, java.awt.BorderLayout.CENTER);
 
@@ -233,14 +261,17 @@ public class JFrameHRMS extends javax.swing.JFrame {
 
     private void jButtonBookingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBookingActionPerformed
         cardLayout.show(cardsPanel, "Booking");
+         clickSideBarButton(jButtonBooking);
     }//GEN-LAST:event_jButtonBookingActionPerformed
 
     private void jButtonSalesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalesActionPerformed
         cardLayout.show(cardsPanel, "Sales");
+        clickSideBarButton(jButtonSales);
     }//GEN-LAST:event_jButtonSalesActionPerformed
 
     private void jButtonReportsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReportsActionPerformed
         cardLayout.show(cardsPanel, "Reports");
+        clickSideBarButton(jButtonReports);
     }//GEN-LAST:event_jButtonReportsActionPerformed
 
     private void jButtonUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonUserActionPerformed
@@ -258,8 +289,10 @@ public class JFrameHRMS extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanelSideBarButtons;
+    private javax.swing.JToggleButton jToggleButton1;
     // End of variables declaration//GEN-END:variables
 private void loginUser() {
         if (loginUser.getUser() != null) {
@@ -273,11 +306,9 @@ private void loginUser() {
             jPanelSideBarButtons.setVisible(true);
             displayPicture(loginUser.getUser());
             if (loginUser.getUser().getRole().getRole().equals("ADMIN")) {
-//                jButtonSettings.setEnabled(true);
                 menuItemUser.setVisible(true);
 
             } else if (loginUser.getUser().getRole().getRole().equals("USER")) {
-//                jButtonSettings.setEnabled(false);
                 menuItemUser.setVisible(false);
             }
             jPanelSideBarButtons.add(jButtonBooking);
@@ -292,6 +323,7 @@ private void loginUser() {
             menuItemLogin.setVisible(false);
             menuItemLogout.setVisible(true);
             menuItemChangePassword.setVisible(true);
+            jButtonUser.setText(loginUser.getUser().getFirstname());
         } else {
 //            logout
             jPanelSideBarButtons.removeAll();
@@ -308,6 +340,8 @@ private void loginUser() {
             menuItemLogin.setVisible(true);
             menuItemLogout.setVisible(false);
             menuItemChangePassword.setVisible(false);
+            jButtonUser.setIcon(new FlatSVGIcon("svg/user.svg", 24, 24));
+            jButtonUser.setText("User");
 
         }
 
@@ -337,6 +371,7 @@ private void loginUser() {
                 logInUser.setUser(user);
                 loginUser();
                 displayPicture(logInUser.getUser());
+
                 // login for jdialog
             } else {
                 loginUser();
@@ -351,33 +386,8 @@ private void loginUser() {
         }
     }
 
-    int IMG_WIDTH = 140;
-    int IMG_HEIGHT = 140;
-
-    private void displayPicture(User user) {
-        try {
-            byte[] imageData = user.getPhoto();
-            ImageIcon imageIcon = new ImageIcon(imageData);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private Image getCircleImage(Image img, int width, int height) {
-        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2 = image.createGraphics();
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        Ellipse2D.Double circle = new Ellipse2D.Double(0, 0, width, height);
-        g2.setClip(circle);
-        g2.drawImage(img, 0, 0, width, height, null);
-        g2.dispose();
-        return image;
-    }
-
     private void addPanels() {
         cardsPanel = new JPanel(cardLayout);
-        cardsPanel.add(panelDashboard, "Dashboard");
-//        cardsPanel.add(panelBooking, "Content");
     }
 
     private void popUpMenuSettings() {
@@ -406,7 +416,6 @@ private void loginUser() {
         popupMenu.add(menuItemRoomStatus);
         popupMenu.add(menuItemStorey);
         popupMenu.add(menuItemUser);
-        
 
         // Add action listeners to menu items
         menuItemRoom.addActionListener(new ActionListener() {
@@ -453,7 +462,7 @@ private void loginUser() {
                 storey.setVisible(true);
             }
         });
-        
+
         menuItemUser.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -497,6 +506,7 @@ private void loginUser() {
                 cardsPanel.setVisible(false);
                 clearLoginCredentials();
                 loginUser.setUser(null);
+                jButtonUser.setIcon(null);
                 loginUser();
                 JDialogLogin login = new JDialogLogin(jFrameHRMS, true);
                 login.setVisible(true);
@@ -552,4 +562,88 @@ private void loginUser() {
             e.printStackTrace();
         }
     }
+    int width = 28;
+    int height = 28;
+
+    private void displayPicture(User user) {
+        try {
+            byte[] imageData = user.getPhoto();
+            ImageIcon imageIcon = new ImageIcon(imageData);
+            jButtonUser.setIcon(new ImageIcon(getCircleImage(imageIcon.getImage(), width, height)));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private Image getCircleImage(Image img, int width, int height) {
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = image.createGraphics();
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        Ellipse2D.Double circle = new Ellipse2D.Double(0, 0, width, height);
+        g2.setClip(circle);
+        g2.drawImage(img, 0, 0, width, height, null);
+        g2.dispose();
+        return image;
+    }
+
+    private static boolean isDarkTheme = false;
+    private void toggleIcon() {
+
+        // Create the toggle button
+        jToggleButton1.setSelectedIcon(new FlatSVGIcon("svg/light.svg", 24, 24));
+
+        // Add an action listener to toggle the icon
+        jToggleButton1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+//                if (jToggleButton1.isSelected()) {
+//                    jToggleButton1.setIcon(new FlatSVGIcon("svg/dark.svg",24,24));
+//                } else {
+//                    jToggleButton1.setIcon(new FlatSVGIcon("svg/light.svg",24,24));
+//                }
+                isDarkTheme = !isDarkTheme;
+                setLookAndFeel();
+                SwingUtilities.updateComponentTreeUI(jFrameHRMS);
+            }
+        });
+    }
+     private static void setLookAndFeel() {
+        try {
+            if (isDarkTheme) {
+                
+                UIManager.setLookAndFeel(new FlatDarkLaf());
+            } else {
+                UIManager.setLookAndFeel(new FlatLightLaf());
+            }
+        } catch (UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
+    }
+     
+     
+     private void clickSideBarButton(JButton button){
+         try{
+             if(jButtonBooking ==button){
+                 jButtonBooking.setBackground(new Color(0, 153, 204));
+                 jButtonSales.setBackground(null);
+                 jButtonReports.setBackground(null);
+                 
+                 
+             }else if(jButtonSales ==button){
+                 jButtonBooking.setBackground(null);
+                 jButtonSales.setBackground(new Color(0, 153, 204));
+                 jButtonReports.setBackground(null);
+                 
+             }else if(jButtonReports ==button){
+                 jButtonBooking.setBackground(null);
+                 jButtonSales.setBackground(null);
+                 jButtonReports.setBackground(new Color(0, 153, 204));
+                 
+             }
+             
+         }catch(Exception e){
+             e.printStackTrace();
+         }
+     }
+
 }

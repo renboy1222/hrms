@@ -7,11 +7,11 @@ package com.aldrin.hrms.gui;
 import com.aldrin.hrms.dao.impl.BillDAOImpl;
 import com.aldrin.hrms.dao.impl.BookingDAOImpl;
 import com.aldrin.hrms.dao.impl.CustomerDAOImpl;
+import com.aldrin.hrms.dao.impl.DBConnection;
 import com.aldrin.hrms.dao.impl.PaymentDAOImpl;
 import com.aldrin.hrms.dao.impl.RoomDAOImpl;
 import com.aldrin.hrms.dao.impl.RoomRateDAOImpl;
 import com.aldrin.hrms.dao.impl.UserDAOImpl;
-import com.aldrin.hrms.gui.panel.JPanelDashboard;
 import com.aldrin.hrms.model.Bill;
 import com.aldrin.hrms.model.Booking;
 import com.aldrin.hrms.model.Customer;
@@ -34,6 +34,8 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
@@ -45,6 +47,9 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperPrintManager;
 
 /**
  *
@@ -316,7 +321,20 @@ public class JDialogBooking extends javax.swing.JDialog implements MouseListener
     }//GEN-LAST:event_jButtonAdBooking2ActionPerformed
 
     private void jButtonAdBooking3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAdBooking3ActionPerformed
-        // TODO add your handling code here:
+        try {
+            PaymentDAOImpl paymentDAOImpl = new PaymentDAOImpl();
+            DBConnection con = new DBConnection();
+            con.getDBConn();
+            String fullPath = System.getProperty("user.dir") + "/src/main/resources/reports/hrmsInvoice.jasper";
+            Map<String, Object> param = new HashMap<String, Object>();
+            param.put("INVOICEID", paymentDAOImpl.getMaxId());
+            JasperPrint jp = JasperFillManager.fillReport(fullPath, param, con.getCon());
+            JasperPrintManager.printReport(jp, false); // print to default printer
+
+//            JasperExportManager.exportReportToPdfFile(jp, "C:\\Users\\admin\\Desktop\\userSales.pdf");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }//GEN-LAST:event_jButtonAdBooking3ActionPerformed
 
     private void jButtonPaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPaymentActionPerformed
@@ -496,14 +514,14 @@ public class JDialogBooking extends javax.swing.JDialog implements MouseListener
         hide0.setMinWidth(0);
         hide0.setMaxWidth(0);
         hide0.setPreferredWidth(0);
-//        TableColumn hide9 = jTableBooking.getColumnModel().getColumn(9);
-//        hide9.setMinWidth(0);
-//        hide9.setMaxWidth(0);
-//        hide9.setPreferredWidth(0);
-//        TableColumn hide10 = jTableBooking.getColumnModel().getColumn(10);
-//        hide10.setMinWidth(0);
-//        hide10.setMaxWidth(0);
-//        hide10.setPreferredWidth(0);
+        TableColumn hide9 = jTableBooking.getColumnModel().getColumn(9);
+        hide9.setMinWidth(0);
+        hide9.setMaxWidth(0);
+        hide9.setPreferredWidth(0);
+        TableColumn hide10 = jTableBooking.getColumnModel().getColumn(10);
+        hide10.setMinWidth(0);
+        hide10.setMaxWidth(0);
+        hide10.setPreferredWidth(0);
         TableColumn hide12 = jTableBooking.getColumnModel().getColumn(12);
         hide12.setMinWidth(0);
         hide12.setMaxWidth(0);

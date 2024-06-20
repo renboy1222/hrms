@@ -10,10 +10,12 @@ import com.aldrin.hrms.gui.JFrameHRMS;
 import com.aldrin.hrms.model.Payment;
 import com.aldrin.hrms.util.ComboBoxList;
 import com.formdev.flatlaf.FlatClientProperties;
+import java.awt.Font;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
@@ -52,7 +54,7 @@ public class JPanelSales extends javax.swing.JPanel {
         jPanel5 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTableCategory = new javax.swing.JTable();
+        jTableSales = new javax.swing.JTable();
         jPanel8 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
         jPanel11 = new javax.swing.JPanel();
@@ -81,7 +83,7 @@ public class JPanelSales extends javax.swing.JPanel {
 
         jPanel4.setLayout(new java.awt.BorderLayout());
 
-        jTableCategory.setModel(new javax.swing.table.DefaultTableModel(
+        jTableSales.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -92,7 +94,7 @@ public class JPanelSales extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTableCategory);
+        jScrollPane1.setViewportView(jTableSales);
 
         jPanel4.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
@@ -264,7 +266,7 @@ public class JPanelSales extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTableCategory;
+    private javax.swing.JTable jTableSales;
     private javax.swing.JTextField jTextFieldSearch;
     // End of variables declaration//GEN-END:variables
 
@@ -318,18 +320,21 @@ public class JPanelSales extends javax.swing.JPanel {
     private TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(tableModel);
 
     private void setTable() {
-        jTableCategory.setCellSelectionEnabled(true);
-        jTableCategory = new JTable(tableModel);
-        jScrollPane1.setViewportView(jTableCategory);
+        jTableSales.setCellSelectionEnabled(true);
+        jTableSales = new JTable(tableModel);
+        jScrollPane1.setViewportView(jTableSales);
 //        jTableCategory.addMouseListener(this);
-        jTableCategory.setRowSorter(sorter);
-        TableColumn hide0 = jTableCategory.getColumnModel().getColumn(4);
+        jTableSales.setRowSorter(sorter);
+        TableColumn hide0 = jTableSales.getColumnModel().getColumn(4);
         hide0.setMinWidth(0);
         hide0.setMaxWidth(0);
         hide0.setPreferredWidth(0);
+        JTableHeader header = jTableSales.getTableHeader();
+        header.setFont(new Font("Courier New", Font.PLAIN, 14));
+        header.setBackground(new java.awt.Color(70, 130, 180));
 
         TableColumn[] column = new TableColumn[100];
-        column[1] = jTableCategory.getColumnModel().getColumn(1);
+        column[1] = jTableSales.getColumnModel().getColumn(1);
         column[1].setPreferredWidth(110);
 
     }
@@ -392,8 +397,8 @@ public class JPanelSales extends javax.swing.JPanel {
 
     private void calculateTotal() {
         float total = 0.0f;
-        for (int i = 0; i < jTableCategory.getRowCount(); i++) {
-            float amount = (float) jTableCategory.getValueAt(i, 4);
+        for (int i = 0; i < jTableSales.getRowCount(); i++) {
+            float amount = (float) jTableSales.getValueAt(i, 4);
             total = total + amount;
         }
         jLabelTotal.setText(String.valueOf(df.format(total)));

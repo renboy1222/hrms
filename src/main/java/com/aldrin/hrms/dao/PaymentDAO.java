@@ -6,7 +6,6 @@ package com.aldrin.hrms.dao;
 
 import com.aldrin.hrms.model.Payment;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
@@ -28,5 +27,7 @@ public interface PaymentDAO {
     public void comboBoxInvoiceId();
     
     public ArrayList<Payment> selectUserReceiveAmount(Long userId, Long from,Long to);
+    
+     public Long getMaxId();
 
 }
