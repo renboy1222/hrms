@@ -2,11 +2,8 @@
 -- Create schema hrms
 --
 
-CREATE DATABASE IF NOT EXISTS hrms2;
-USE hrms2;
-
-
-
+CREATE DATABASE IF NOT EXISTS hrms;
+USE hrms;
 
 -- 1. ROOM STATUS
 DROP TABLE IF EXISTS `room_status`;
