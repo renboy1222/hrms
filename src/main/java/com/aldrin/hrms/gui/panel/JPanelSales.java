@@ -273,7 +273,7 @@ public class JPanelSales extends javax.swing.JPanel {
     private UserDAOImpl userDAOImpl = new UserDAOImpl();
     private PaymentDAOImpl paymentDAOImpl = new PaymentDAOImpl();
 
-    private void comboBoxUser() {
+    public void comboBoxUser() {
         userDAOImpl.comboBoxUser();
         jComboBoxUser.removeAllItems();
         for (ComboBoxList a : userDAOImpl.getList()) {
@@ -281,7 +281,7 @@ public class JPanelSales extends javax.swing.JPanel {
         }
     }
 
-    private void comboBoxFromInvoice() {
+    public void comboBoxFromInvoice() {
         paymentDAOImpl.comboBoxInvoiceId();
         jComboBoxFrom.removeAllItems();
         for (ComboBoxList a : paymentDAOImpl.getList()) {
@@ -289,7 +289,7 @@ public class JPanelSales extends javax.swing.JPanel {
         }
     }
 
-    private void comboBoxToInvoice() {
+    public void comboBoxToInvoice() {
         paymentDAOImpl.comboBoxInvoiceId();
         jComboBoxTo.removeAllItems();
         for (ComboBoxList a : paymentDAOImpl.getList()) {
@@ -342,7 +342,7 @@ public class JPanelSales extends javax.swing.JPanel {
     private ArrayList<Payment> paymentList;
     private DecimalFormat df = new DecimalFormat("##,##0.00");
 
-    private void selectPaymentReceived() {
+    public void selectPaymentReceived() {
         tableModel.setRowCount(0);
         paymentList = paymentDAOImpl.selectUserReceiveAmount(getUserId(), getFromId(), getToId());
         tableModel.setRowCount(0);

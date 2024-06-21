@@ -27,6 +27,7 @@ import com.formdev.flatlaf.extras.FlatSVGIcon;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
@@ -62,9 +63,6 @@ public class JFrameHRMS extends javax.swing.JFrame {
 
     private CardLayout cardLayout = new CardLayout();
     private JPanel cardsPanel = new JPanel(cardLayout);
-    JPanelBooking panelBooking = new JPanelBooking(this);
-    JPanelSales panelSales = new JPanelSales();
-    JPanelReports panelReports = new JPanelReports();
     JPanelSettings panelSettings = new JPanelSettings();
 
     JMenuItem menuItemLogin = new JMenuItem("Login");
@@ -91,9 +89,9 @@ public class JFrameHRMS extends javax.swing.JFrame {
 
         saveLoginCredentials();
 
-        cardsPanel.add(panelBooking, "Booking");
-        cardsPanel.add(panelSales, "Sales");
-        cardsPanel.add(panelReports, "Reports");
+        cardsPanel.add(new JPanelBooking(jFrameHRMS), "Booking");
+        cardsPanel.add(new JPanelSales(), "Sales");
+        cardsPanel.add(new JPanelReports(), "Reports");
         cardsPanel.add(panelSettings, "Settings");
         jPanel2.add(cardsPanel, BorderLayout.CENTER);
         this.jFrameHRMS = this;
@@ -252,16 +250,32 @@ public class JFrameHRMS extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonSettingsActionPerformed
 
     private void jButtonBookingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBookingActionPerformed
+        cardsPanel.removeAll();
+        cardsPanel.add(new JPanelBooking(jFrameHRMS), "Booking");
+        cardsPanel.add(new JPanelSales(), "Sales");
+        cardsPanel.add(new JPanelReports(), "Reports");
+        cardsPanel.add(panelSettings, "Settings");
         cardLayout.show(cardsPanel, "Booking");
-         clickSideBarButton(jButtonBooking);
+        clickSideBarButton(jButtonBooking);
     }//GEN-LAST:event_jButtonBookingActionPerformed
 
     private void jButtonSalesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalesActionPerformed
+        cardsPanel.removeAll();
+        cardsPanel.add(new JPanelBooking(jFrameHRMS), "Booking");
+        cardsPanel.add(new JPanelSales(), "Sales");
+        cardsPanel.add(new JPanelReports(), "Reports");
+        cardsPanel.add(panelSettings, "Settings");
         cardLayout.show(cardsPanel, "Sales");
         clickSideBarButton(jButtonSales);
+
     }//GEN-LAST:event_jButtonSalesActionPerformed
 
     private void jButtonReportsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReportsActionPerformed
+        cardsPanel.removeAll();
+        cardsPanel.add(new JPanelBooking(jFrameHRMS), "Booking");
+        cardsPanel.add(new JPanelSales(), "Sales");
+        cardsPanel.add(new JPanelReports(), "Reports");
+        cardsPanel.add(panelSettings, "Settings");
         cardLayout.show(cardsPanel, "Reports");
         clickSideBarButton(jButtonReports);
     }//GEN-LAST:event_jButtonReportsActionPerformed
@@ -290,9 +304,9 @@ private void loginUser() {
         if (loginUser.getUser() != null) {
 //            login 
             cardsPanel.setVisible(true);
-            cardsPanel.add(panelBooking, "Booking");
-            cardsPanel.add(panelSales, "Sales");
-            cardsPanel.add(panelReports, "Reports");
+            cardsPanel.add(new JPanelBooking(jFrameHRMS), "Booking");
+            cardsPanel.add(new JPanelSales(), "Sales");
+            cardsPanel.add(new JPanelReports(), "Reports");
             cardsPanel.add(panelSettings, "Settings");
             jPanel2.add(cardsPanel, BorderLayout.CENTER);
             jPanelSideBarButtons.setVisible(true);
@@ -579,6 +593,7 @@ private void loginUser() {
     }
 
     private static boolean isDarkTheme = false;
+
     private void toggleIcon() {
 
         // Create the toggle button
@@ -588,21 +603,17 @@ private void loginUser() {
         jToggleButton1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                if (jToggleButton1.isSelected()) {
-//                    jToggleButton1.setIcon(new FlatSVGIcon("svg/dark.svg",24,24));
-//                } else {
-//                    jToggleButton1.setIcon(new FlatSVGIcon("svg/light.svg",24,24));
-//                }
                 isDarkTheme = !isDarkTheme;
                 setLookAndFeel();
                 SwingUtilities.updateComponentTreeUI(jFrameHRMS);
             }
         });
     }
-     private static void setLookAndFeel() {
+
+    private static void setLookAndFeel() {
         try {
             if (isDarkTheme) {
-                
+
                 UIManager.setLookAndFeel(new FlatDarkLaf());
             } else {
                 UIManager.setLookAndFeel(new FlatLightLaf());
@@ -611,31 +622,29 @@ private void loginUser() {
             e.printStackTrace();
         }
     }
-     
-     
-     private void clickSideBarButton(JButton button){
-         try{
-             if(jButtonBooking ==button){
-                 jButtonBooking.setBackground(new Color(0, 153, 204));
-                 jButtonSales.setBackground(null);
-                 jButtonReports.setBackground(null);
-                 
-                 
-             }else if(jButtonSales ==button){
-                 jButtonBooking.setBackground(null);
-                 jButtonSales.setBackground(new Color(0, 153, 204));
-                 jButtonReports.setBackground(null);
-                 
-             }else if(jButtonReports ==button){
-                 jButtonBooking.setBackground(null);
-                 jButtonSales.setBackground(null);
-                 jButtonReports.setBackground(new Color(0, 153, 204));
-                 
-             }
-             
-         }catch(Exception e){
-             e.printStackTrace();
-         }
-     }
+
+    private void clickSideBarButton(JButton button) {
+        try {
+            if (jButtonBooking == button) {
+                jButtonBooking.setBackground(new Color(0, 153, 204));
+                jButtonSales.setBackground(null);
+                jButtonReports.setBackground(null);
+
+            } else if (jButtonSales == button) {
+                jButtonBooking.setBackground(null);
+                jButtonSales.setBackground(new Color(0, 153, 204));
+                jButtonReports.setBackground(null);
+
+            } else if (jButtonReports == button) {
+                jButtonBooking.setBackground(null);
+                jButtonSales.setBackground(null);
+                jButtonReports.setBackground(new Color(0, 153, 204));
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }

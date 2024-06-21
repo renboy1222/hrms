@@ -379,7 +379,7 @@ public class JPanelReports extends javax.swing.JPanel {
     private javax.swing.JComboBox<Object> jComboBoxFrom;
     private javax.swing.JComboBox<Object> jComboBoxTo;
     private javax.swing.JComboBox<Object> jComboBoxUser;
-    private javax.swing.JDesktopPane jDesktopPane1;
+    private static javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
@@ -446,7 +446,7 @@ public class JPanelReports extends javax.swing.JPanel {
         userId = aUserId;
     }
 
-    public void showReport() {
+    public static void showReport() {
         JasperPrint JPrint;
         try {
             DBConnection con = new DBConnection();
