@@ -7,7 +7,6 @@ package com.aldrin.hrms.gui.panel;
 import com.aldrin.hrms.dao.impl.BookingDAOImpl;
 import com.aldrin.hrms.dao.impl.PaymentDAOImpl;
 import com.aldrin.hrms.dao.impl.RoomDAOImpl;
-import com.aldrin.hrms.gui.JFrameHRMS;
 import com.aldrin.hrms.model.Booking;
 import com.aldrin.hrms.model.Payment;
 import com.aldrin.hrms.model.Room;

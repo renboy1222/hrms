@@ -4,11 +4,9 @@
  */
 package com.aldrin.hrms.gui.dialog;
 
-import com.aldrin.hrms.dao.impl.RoomTypeDAOImpl;
 import com.aldrin.hrms.dao.impl.StoreyDAOImpl;
 import com.aldrin.hrms.gui.JFrameHRMS;
 import com.aldrin.hrms.gui.dialog.au.JDialogStoreyAU;
-import com.aldrin.hrms.model.RoomType;
 import com.aldrin.hrms.model.Storey;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;

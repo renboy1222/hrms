@@ -207,37 +207,7 @@ public class JDialogAddBooking extends javax.swing.JDialog {
     }//GEN-LAST:event_jComboBoxRoomActionPerformed
 
     private void jComboBoxDurationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxDurationActionPerformed
-//        try {
-//            RoomRate rr = new RoomRate();
-//            ComboBoxList durationId = (ComboBoxList) this.jComboBoxDuration.getSelectedItem();
-//            rr.setId(durationId.getId());
-//            rr = roomRateDAOImpl.selectDurationToDisplayPriceDownPayment(rr);
-//            jTextFieldPrice.setText(String.valueOf(rr.getPrice()));
-//            jTextFieldDownPayment.setText(String.valueOf(rr.getDown_payment()));
-//            String checkInDate = new java.sql.Date(jDateChooserStartDate.getDate().getTime()).toString();
-//            String cDate = checkInDate + " " + jComboBoxStartHour.getSelectedItem().toString() + ":" + jComboBoxStartMinutes.getSelectedItem() + ":" + "00";
-//            ComboBoxList rrIdl = (ComboBoxList) this.jComboBoxDuration.getSelectedItem();
-//            rr.setId(rrIdl.getId());
-//            String checkOut = roomRateDAOImpl.calculateMinutesToCheckOutDuration(rr, cDate);
-//            jDateChooserEndDate.setDate(new Date(Integer.parseInt(checkOut.toString().substring(0, 4)) - 1900, Integer.parseInt(checkOut.toString().substring(5, 7)) - 1, Integer.parseInt(checkOut.substring(8, 10))));
-//            int hour = Integer.parseInt(checkOut.toString().substring(11, 13));
-//            System.out.println("hour:" + hour);
-//            if (hour > 12) {
-////                PM
-//                jComboBoxEndHour.setSelectedIndex(Integer.parseInt(checkOut.toString().substring(11, 13)) - 13);
-//                jComboBoxEndAMPM.setSelectedIndex(1);
-//            } else if (hour < 12) {
-//                jComboBoxEndHour.setSelectedIndex(Integer.parseInt(checkOut.toString().substring(11, 13)) - 1);
-//                jComboBoxEndAMPM.setSelectedIndex(0);
-//            } else if (hour == 24) {
-//                jComboBoxEndHour.setSelectedIndex(Integer.parseInt(checkOut.toString().substring(11, 13)) - 12);
-//            }
-//            jComboBoxEndMinutes.setSelectedIndex(Integer.parseInt(checkOut.toString().substring(14, 16)));
-//            int n = Integer.parseInt(checkOut.toString().substring(11, 13));
-//
-//        } catch (Exception e) {
-//            System.out.print(e.getStackTrace());
-//        }
+
         calculateDuration();
 
     }//GEN-LAST:event_jComboBoxDurationActionPerformed
@@ -337,7 +307,6 @@ public class JDialogAddBooking extends javax.swing.JDialog {
             String checkOut = roomRateDAOImpl.calculateMinutesToCheckOutDuration(rr, cDate);
             jDateChooserEndDate.setDate(new Date(Integer.parseInt(checkOut.toString().substring(0, 4)) - 1900, Integer.parseInt(checkOut.toString().substring(5, 7)) - 1, Integer.parseInt(checkOut.substring(8, 10))));
             int hour = Integer.parseInt(checkOut.toString().substring(11, 13));
-//            System.out.println("start date chooser:" + hour);
             if (hour > 12) {
                 //PM
                 jComboBoxEndHour.setSelectedIndex(Integer.parseInt(checkOut.toString().substring(11, 13)) - 12);
@@ -445,7 +414,6 @@ public class JDialogAddBooking extends javax.swing.JDialog {
             jComboBoxEndHour.setSelectedIndex(hh);
             jComboBoxEndMinutes.setSelectedIndex(mm);
             jComboBoxEndAMPM.setSelectedIndex(0);
-            System.out.println("fhh:" + jComboBoxEndHour.getSelectedIndex());
         } else if (hh == 12) {
             //AM
             jComboBoxStartHour.setSelectedIndex(hh - 1);
@@ -454,7 +422,6 @@ public class JDialogAddBooking extends javax.swing.JDialog {
             jComboBoxEndHour.setSelectedIndex(hh - 1);
             jComboBoxEndMinutes.setSelectedIndex(mm);
             jComboBoxEndAMPM.setSelectedIndex(0);
-            System.out.println("=fhh:" + jComboBoxEndHour.getSelectedIndex());
 
         } else if (hh > 12) {
             //AM
@@ -463,8 +430,6 @@ public class JDialogAddBooking extends javax.swing.JDialog {
             jComboBoxStartAMPM.setSelectedIndex(1);
             jComboBoxEndHour.setSelectedIndex(hh - 13);
             jComboBoxEndMinutes.setSelectedIndex(mm);
-
-//            System.out.println("!!!!" + hh);
             if ((hh + jComboBoxEndHour.getSelectedIndex()) > 24) {
                 jComboBoxEndAMPM.setSelectedIndex(1);
             } else if ((hh + jComboBoxEndHour.getSelectedIndex()) < 24) {
@@ -491,8 +456,6 @@ public class JDialogAddBooking extends javax.swing.JDialog {
         CurrentHourAndTime ct = new CurrentHourAndTime();
         int hh = Integer.parseInt(ct.selectHourAndMinutes().getCurrentTime().substring(0, 2));
         int mm = Integer.parseInt(ct.selectHourAndMinutes().getCurrentTime().substring(3, 5));
-//        System.out.println("hh::" + hh);
-//        System.out.println("mm::" + mm);
         String cDate = checkInDate + " " + jComboBoxStartHour.getSelectedItem().toString() + ":" + jComboBoxStartMinutes.getSelectedItem().toString() + ":" + "00";
         RoomRate rr = new RoomRate();
         ComboBoxList rrIdl = (ComboBoxList) this.jComboBoxDuration.getSelectedItem();
@@ -531,25 +494,10 @@ public class JDialogAddBooking extends javax.swing.JDialog {
             String checkOut = roomRateDAOImpl.calculateMinutesToCheckOutDuration(rr, cDate);
             jDateChooserEndDate.setDate(new Date(Integer.parseInt(checkOut.toString().substring(0, 4)) - 1900, Integer.parseInt(checkOut.toString().substring(5, 7)) - 1, Integer.parseInt(checkOut.substring(8, 10))));
             int hour = Integer.parseInt(checkOut.toString().substring(11, 13));
-            System.out.println("hour:" + hour); // DURATION
-//            if (hour > 12) {
-////                PM
-//                jComboBoxEndHour.setSelectedIndex(Integer.parseInt(checkOut.toString().substring(11, 13)) - 13);
-//                jComboBoxEndAMPM.setSelectedIndex(1);
-//            } else if (hour < 12) {
-//                jComboBoxEndHour.setSelectedIndex(Integer.parseInt(checkOut.toString().substring(11, 13)) - 1);
-//                jComboBoxEndAMPM.setSelectedIndex(0);
-//            } else if (hour == 24) {
-//                jComboBoxEndHour.setSelectedIndex(Integer.parseInt(checkOut.toString().substring(11, 13)) - 12);
-//            }
-//            jComboBoxEndMinutes.setSelectedIndex(Integer.parseInt(checkOut.toString().substring(14, 16)));
-//            int n = Integer.parseInt(checkOut.toString().substring(11, 13));
             if(jComboBoxStartAMPM.getSelectedIndex()==0){
                
             }
-            System.out.println("checkOut"+checkOut.toString());
         } catch (Exception e) {
-//            System.out.print(e.getStackTrace());
         }
     }
 

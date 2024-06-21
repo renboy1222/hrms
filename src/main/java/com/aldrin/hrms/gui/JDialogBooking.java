@@ -345,7 +345,6 @@ public class JDialogBooking extends javax.swing.JDialog implements MouseListener
         BillDAOImpl billDAOImpl = new BillDAOImpl();
         Bill bill = new Bill();
         if (getPay() == true) {
-            System.out.println("amount:" + getBooking().getAmount());
             //insert bill
 
             Customer c = new Customer();
@@ -364,7 +363,6 @@ public class JDialogBooking extends javax.swing.JDialog implements MouseListener
                 roomRate.setId(roomRateId);
                 bill.setId(billDAOImpl.getMaxId());
                 booking.setBill(bill);
-                System.out.println("bill id:" + booking.getBill().getId());
 
                 Date cInDate = new StringToDate().convertStringToDate(checkInDate);
                 Date cOutDate = new StringToDate().convertStringToDate(checkOutDate);

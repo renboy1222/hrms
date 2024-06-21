@@ -596,16 +596,6 @@ public class JPanelBooking extends javax.swing.JPanel implements MouseListener {
         itemCancel.setIcon(new FlatSVGIcon("svg/cancel.svg", 16, 16));
 
         for (int i = 0; i < jTable1.getRowCount(); i++) {
-
-//            Boolean reserve = (Boolean) jTable1.getValueAt(i, 19);
-//            System.out.println("reserve:"+reserve);
-//            if (reserve == null) {
-//                return;
-//            }else if (reserve == true) {
-//                popupMenu.add(itemCancel);
-//            } else {
-////                itemCancel.setVisible(false);
-//            }
         }
 //        popupMenu.add(itemCancel);
         jTable1.addMouseListener(new MouseAdapter() {

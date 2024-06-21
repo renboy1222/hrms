@@ -457,7 +457,6 @@ public class JDialogUserSalesReport extends javax.swing.JDialog {
             jDesktopPane1.add(jrv);
             jDesktopPane1.revalidate();
         } catch (Exception ex) {
-            System.out.println(ex.toString());
         }
     }
 

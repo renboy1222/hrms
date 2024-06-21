@@ -201,24 +201,6 @@ public class JDialogPayment extends javax.swing.JDialog {
         }
     }
 
-//    //        System.out.println("interger value:" + jFormattedTextField1.getText().replace(",", ""));
-//        Float amount = Float.parseFloat(jFormattedTextField1.getText().replace(",", ""));
-//        Float full = dialogBooking.getFull();
-//        Float partial = dialogBooking.getPartial();
-//        if (full == amount) {
-//            jButtonPayment.setEnabled(true);
-//            System.out.println("if (dialogBooking.getFull() == amount) {" + amount);
-//        } else if (partial == amount) {
-//            System.out.println("} else if (dialogBooking.getPartial() == amount) {" + amount);
-//            jButtonPayment.setEnabled(true);
-//        } 
-////        else if (full != amount || partial != amount) {
-////            jButtonPayment.setEnabled(false);
-////            System.out.println("else" + amount);
-////        }
-//        System.out.println("partial:" + dialogBooking.getPartial());
-//        System.out.println("full:" + dialogBooking.getPartial());
-//        System.out.println("amount" + amount);
     public static boolean areEqual(float num1, float num2, float epsilon) {
         return Math.abs(num1 - num2) < epsilon;
     }

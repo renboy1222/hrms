@@ -58,7 +58,7 @@ SET
   `email` = ?,
   `name` = ?,
   `phone` = ? 
-WHERE `customer_id` = ? 
+WHERE `id` = ? 
                                                                       """);
             ps.setString(1, customer.getAddress());
             ps.setString(2, customer.getEmail());
