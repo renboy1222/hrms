@@ -27,7 +27,6 @@ import com.formdev.flatlaf.extras.FlatSVGIcon;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
@@ -62,6 +61,9 @@ public class JFrameHRMS extends javax.swing.JFrame {
     Preferences preferences = Preferences.userNodeForPackage(Hrms.class);
 
     private CardLayout cardLayout = new CardLayout();
+    private JPanelBooking panelBooking = new JPanelBooking(this);
+    private JPanelSales panelSales = new JPanelSales();
+    private JPanelReports panelReports = new JPanelReports();
     private JPanel cardsPanel = new JPanel(cardLayout);
     JPanelSettings panelSettings = new JPanelSettings();
 
@@ -86,15 +88,16 @@ public class JFrameHRMS extends javax.swing.JFrame {
         String storedUsername = preferences.get(USERNAME_PREF_KEY, null);
         String storedPassword = preferences.get(PASSWORD_PREF_KEY, null);
         loginUser.setUser(null);
+        this.jFrameHRMS =this;
 
         saveLoginCredentials();
 
-        cardsPanel.add(new JPanelBooking(jFrameHRMS), "Booking");
-        cardsPanel.add(new JPanelSales(), "Sales");
-        cardsPanel.add(new JPanelReports(), "Reports");
+        cardsPanel.add(panelBooking, "Booking");
+        cardsPanel.add(panelSales, "Sales");
+        cardsPanel.add(panelReports, "Reports");
         cardsPanel.add(panelSettings, "Settings");
         jPanel2.add(cardsPanel, BorderLayout.CENTER);
-        this.jFrameHRMS = this;
+
         popUpMenuSettings();
         popUpMenuUser();
 
@@ -105,6 +108,14 @@ public class JFrameHRMS extends javax.swing.JFrame {
         });
         toggleIcon();
         clickSideBarButton(jButtonBooking);
+        jButtonBooking.putClientProperty("JButton.buttonType", "square");
+        jButtonSales.putClientProperty("JButton.buttonType", "square");
+        jButtonReports.putClientProperty("JButton.buttonType", "square");
+        jButtonSettings.putClientProperty("JButton.buttonType", "square");
+        jButtonUser.putClientProperty("JButton.buttonType", "square");
+        getRootPane().putClientProperty("JRootPane.titleBarBackground", new Color(0,102,153));
+
+
 
     }
 
@@ -127,6 +138,7 @@ public class JFrameHRMS extends javax.swing.JFrame {
         jButtonSettings = new javax.swing.JButton();
         jButtonUser = new javax.swing.JButton();
         jPanel7 = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         jToggleButton1 = new javax.swing.JToggleButton(new FlatSVGIcon("svg/dark.svg",24,24));
         jPanel2 = new javax.swing.JPanel();
@@ -134,14 +146,12 @@ public class JFrameHRMS extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("HRMS - Hotel Room Management System");
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 0, new java.awt.Color(102, 102, 102)));
         jPanel1.setLayout(new java.awt.BorderLayout());
 
         jPanel3.setOpaque(false);
         jPanel3.setPreferredSize(new java.awt.Dimension(140, 10));
         jPanel3.setLayout(new java.awt.BorderLayout());
 
-        jPanel4.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 0, new java.awt.Color(102, 102, 102)));
         jPanel4.setOpaque(false);
         jPanel4.setLayout(new java.awt.BorderLayout());
 
@@ -218,11 +228,17 @@ public class JFrameHRMS extends javax.swing.JFrame {
 
         jPanel7.setOpaque(false);
         jPanel7.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jButton1.setBackground(new java.awt.Color(0, 102, 153));
+        jButton1.setText("jButton1");
+        jPanel7.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 70, -1, -1));
+
         jPanel4.add(jPanel7, java.awt.BorderLayout.CENTER);
 
         jPanel5.setPreferredSize(new java.awt.Dimension(10, 50));
         jPanel5.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
+        jToggleButton1.setForeground(new java.awt.Color(255, 255, 255));
         jToggleButton1.setMargin(new java.awt.Insets(2, 2, 2, 2));
         jToggleButton1.setMaximumSize(new java.awt.Dimension(60, 40));
         jToggleButton1.setMinimumSize(new java.awt.Dimension(60, 40));
@@ -235,13 +251,12 @@ public class JFrameHRMS extends javax.swing.JFrame {
 
         jPanel1.add(jPanel3, java.awt.BorderLayout.WEST);
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 1, 0, 0, new java.awt.Color(153, 153, 153)));
         jPanel2.setLayout(new java.awt.BorderLayout());
         jPanel1.add(jPanel2, java.awt.BorderLayout.CENTER);
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
 
-        setSize(new java.awt.Dimension(1250, 580));
+        setSize(new java.awt.Dimension(1265, 580));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -251,7 +266,7 @@ public class JFrameHRMS extends javax.swing.JFrame {
 
     private void jButtonBookingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBookingActionPerformed
         cardsPanel.removeAll();
-        cardsPanel.add(new JPanelBooking(jFrameHRMS), "Booking");
+        cardsPanel.add(new JPanelBooking(this), "Booking");
         cardsPanel.add(new JPanelSales(), "Sales");
         cardsPanel.add(new JPanelReports(), "Reports");
         cardsPanel.add(panelSettings, "Settings");
@@ -261,7 +276,7 @@ public class JFrameHRMS extends javax.swing.JFrame {
 
     private void jButtonSalesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalesActionPerformed
         cardsPanel.removeAll();
-        cardsPanel.add(new JPanelBooking(jFrameHRMS), "Booking");
+        cardsPanel.add(new JPanelBooking(this), "Booking");
         cardsPanel.add(new JPanelSales(), "Sales");
         cardsPanel.add(new JPanelReports(), "Reports");
         cardsPanel.add(panelSettings, "Settings");
@@ -272,7 +287,7 @@ public class JFrameHRMS extends javax.swing.JFrame {
 
     private void jButtonReportsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReportsActionPerformed
         cardsPanel.removeAll();
-        cardsPanel.add(new JPanelBooking(jFrameHRMS), "Booking");
+        cardsPanel.add(new JPanelBooking(this), "Booking");
         cardsPanel.add(new JPanelSales(), "Sales");
         cardsPanel.add(new JPanelReports(), "Reports");
         cardsPanel.add(panelSettings, "Settings");
@@ -286,6 +301,7 @@ public class JFrameHRMS extends javax.swing.JFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButtonBooking;
     private javax.swing.JButton jButtonReports;
     private javax.swing.JButton jButtonSales;
@@ -304,9 +320,9 @@ private void loginUser() {
         if (loginUser.getUser() != null) {
 //            login 
             cardsPanel.setVisible(true);
-            cardsPanel.add(new JPanelBooking(jFrameHRMS), "Booking");
-            cardsPanel.add(new JPanelSales(), "Sales");
-            cardsPanel.add(new JPanelReports(), "Reports");
+            cardsPanel.add(panelBooking, "Booking");
+            cardsPanel.add(panelSales, "Sales");
+            cardsPanel.add(panelReports, "Reports");
             cardsPanel.add(panelSettings, "Settings");
             jPanel2.add(cardsPanel, BorderLayout.CENTER);
             jPanelSideBarButtons.setVisible(true);
@@ -591,7 +607,6 @@ private void loginUser() {
         g2.dispose();
         return image;
     }
-
     private static boolean isDarkTheme = false;
 
     private void toggleIcon() {
@@ -625,23 +640,25 @@ private void loginUser() {
 
     private void clickSideBarButton(JButton button) {
         try {
-            if (jButtonBooking == button) {
-                jButtonBooking.setBackground(new Color(0, 153, 204));
-                jButtonSales.setBackground(null);
-                jButtonReports.setBackground(null);
+            if (jButtonBooking == button) {  
+//                jButtonSales.setBackground(new Color(78,80,82));
+//                jButtonReports.setBackground(new Color(78,80,82));
+//                jButtonBooking.setBackground(new Color(0, 153, 204));
 
             } else if (jButtonSales == button) {
-                jButtonBooking.setBackground(null);
-                jButtonSales.setBackground(new Color(0, 153, 204));
-                jButtonReports.setBackground(null);
+//                jButtonBooking.setBackground(new Color(78,80,82));       
+//                jButtonReports.setBackground(new Color(78,80,82));
+//                jButtonSales.setBackground(new Color(0, 153, 204));
 
             } else if (jButtonReports == button) {
-                jButtonBooking.setBackground(null);
-                jButtonSales.setBackground(null);
-                jButtonReports.setBackground(new Color(0, 153, 204));
+//                jButtonBooking.setBackground(new Color(78,80,82));
+//                jButtonSales.setBackground(new Color(78,80,82));
+//                jButtonReports.setBackground(new Color(0, 153, 204));
 
             }
 
+//            jButtonSettings.setBackground(new Color(78,80,82));
+//            jButtonUser.setBackground(new Color(78,80,82));
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -275,7 +275,7 @@ public class JDialogAddBooking extends javax.swing.JDialog {
             }
 
             AddBooking addBooking = new AddBooking();
-            addBooking.setAddBooking(addBooking);
+            addBooking.setAddBooking(this.addBooking);
             dispose();
         }
 
@@ -464,13 +464,17 @@ public class JDialogAddBooking extends javax.swing.JDialog {
         jDateChooserEndDate.setDate(new Date(Integer.parseInt(checkOut.toString().substring(0, 4)) - 1900, Integer.parseInt(checkOut.toString().substring(5, 7)) - 1, Integer.parseInt(checkOut.substring(8, 10))));
         int hour = Integer.parseInt(checkOut.toString().substring(11, 13));
         int minutes = Integer.parseInt(checkOut.toString().substring(14, 16));
+        System.out.println("hour::" + hour);
         if (hour > 12) {
             //PM
             jComboBoxEndHour.setSelectedIndex(Integer.parseInt(checkOut.toString().substring(11, 13)) - 13);
             jComboBoxEndMinutes.setSelectedIndex(minutes);
+            jComboBoxEndAMPM.setSelectedIndex(1);
+
         } else if (hour < 12) {
             jComboBoxEndHour.setSelectedIndex(Integer.parseInt(checkOut.toString().substring(11, 13)) - 1);
             jComboBoxEndMinutes.setSelectedIndex(minutes);
+            jComboBoxEndAMPM.setSelectedIndex(0);
         } else if (hour == 24) {
             jComboBoxEndHour.setSelectedIndex(Integer.parseInt(checkOut.toString().substring(11, 13)) - 12);
             jComboBoxEndMinutes.setSelectedIndex(minutes);
@@ -494,8 +498,8 @@ public class JDialogAddBooking extends javax.swing.JDialog {
             String checkOut = roomRateDAOImpl.calculateMinutesToCheckOutDuration(rr, cDate);
             jDateChooserEndDate.setDate(new Date(Integer.parseInt(checkOut.toString().substring(0, 4)) - 1900, Integer.parseInt(checkOut.toString().substring(5, 7)) - 1, Integer.parseInt(checkOut.substring(8, 10))));
             int hour = Integer.parseInt(checkOut.toString().substring(11, 13));
-            if(jComboBoxStartAMPM.getSelectedIndex()==0){
-               
+            if (jComboBoxStartAMPM.getSelectedIndex() == 0) {
+
             }
         } catch (Exception e) {
         }

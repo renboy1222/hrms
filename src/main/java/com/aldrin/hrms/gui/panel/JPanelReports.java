@@ -7,6 +7,7 @@ package com.aldrin.hrms.gui.panel;
 import com.aldrin.hrms.dao.impl.DBConnection;
 import com.aldrin.hrms.dao.impl.PaymentDAOImpl;
 import com.aldrin.hrms.dao.impl.UserDAOImpl;
+import static com.aldrin.hrms.gui.panel.JPanelSales.setUserId;
 import com.aldrin.hrms.util.ComboBoxList;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import java.awt.BorderLayout;
@@ -25,6 +26,7 @@ import net.sf.jasperreports.swing.JRViewer;
  * @author Java Programming with Aldrin
  */
 public class JPanelReports extends javax.swing.JPanel {
+
     private com.aldrin.hrms.gui.JFrameHRMS jFrameHRMS;
     private DecimalFormat df = new DecimalFormat("##,##0.00");
     private static Long userId;
@@ -36,11 +38,13 @@ public class JPanelReports extends javax.swing.JPanel {
     private JRViewer jrviewer;
 
     JPanelDashboard panelDashboard = new JPanelDashboard();
+
     public JPanelReports() {
         initComponents();
-                comboBoxUser();
-        comboBoxFromInvoice();
-        comboBoxToInvoice();
+        comboBoxUser();
+        ComboBoxList userId = (ComboBoxList) this.jComboBoxUser.getSelectedItem();
+        comboBoxFromInvoice(userId.getId());
+        comboBoxToInvoice(userId.getId());
         //table data
 
         BorderLayout layout = new BorderLayout();
@@ -54,6 +58,7 @@ public class JPanelReports extends javax.swing.JPanel {
         jrviewer.setPreferredSize(new Dimension(600, 451));
         jrviewer.setAutoscrolls(true);
         showReport();
+
     }
 
     /**
@@ -324,7 +329,8 @@ public class JPanelReports extends javax.swing.JPanel {
         try {
             ComboBoxList toId = (ComboBoxList) this.jComboBoxUser.getSelectedItem();
             setUserId(toId.getId());
-            //        selectPaymentReceived();
+            comboBoxFromInvoice(toId.getId());
+            comboBoxToInvoice(toId.getId());
             showReport();
 
         } catch (Exception e) {
@@ -416,16 +422,16 @@ public class JPanelReports extends javax.swing.JPanel {
         }
     }
 
-    private void comboBoxFromInvoice() {
-        paymentDAOImpl.comboBoxInvoiceId();
+    private void comboBoxFromInvoice(Long userId) {
+        paymentDAOImpl.comboBoxInvoiceIdByUserId(userId);
         jComboBoxFrom.removeAllItems();
         for (ComboBoxList a : paymentDAOImpl.getList()) {
             this.jComboBoxFrom.addItem(a);
         }
     }
 
-    private void comboBoxToInvoice() {
-        paymentDAOImpl.comboBoxInvoiceId();
+    private void comboBoxToInvoice(Long userId) {
+        paymentDAOImpl.comboBoxInvoiceIdByUserId(userId);
         jComboBoxTo.removeAllItems();
         for (ComboBoxList a : paymentDAOImpl.getList()) {
             this.jComboBoxTo.addItem(a);
@@ -512,6 +518,5 @@ public class JPanelReports extends javax.swing.JPanel {
     public static void setToId(Long aToId) {
         toId = aToId;
     }
-
 
 }

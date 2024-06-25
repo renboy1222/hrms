@@ -33,7 +33,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class PaymentDAOImpl extends DBConnection implements PaymentDAO {
-    
+
     @Override
     public void addPayment(Payment payment) {
         try {
@@ -55,7 +55,7 @@ INSERT INTO `payment` (
             e.printStackTrace();
         }
     }
-    
+
     @Override
     public void updatePayment(Payment payment) {
         try {
@@ -80,7 +80,7 @@ WHERE `id` = ?;
             e.printStackTrace();
         }
     }
-    
+
     @Override
     public void deletePayment(Payment customer) {
         try {
@@ -100,9 +100,9 @@ WHERE `id` = ?;
             e.printStackTrace();
         }
     }
-    
+
     public ArrayList<ComboBoxList> list;
-    
+
     @Override
     public Payment selectRoomBookingPayments(Long roomId) {
         Payment list = new Payment();
@@ -180,9 +180,9 @@ WHERE `id` = ?;
                 bill.setCustomer(customer);
                 booking.setBill(bill);
                 payment.setBill(bill);
-                
+
                 list = payment;
-                
+
             }
             rs.close();
             st.close();
@@ -192,7 +192,7 @@ WHERE `id` = ?;
         }
         return list;
     }
-    
+
     @Override
     public void comboBoxInvoiceId() {
         this.setList(new ArrayList<ComboBoxList>());
@@ -214,12 +214,12 @@ WHERE `id` = ?;
             rs.close();
             statement.close();
             closeConnection();
-            
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
-    
+
     @Override
     public ArrayList<Payment> selectUserReceiveAmount(Long userId, Long from, Long to) {
         ArrayList<Payment> list = new ArrayList<>();
@@ -230,7 +230,7 @@ WHERE `id` = ?;
                                , `user`.`surname`
                                , `customer`.`name`
                                , `payment`.`id`
-                               , `payment`.`created_at`
+                               , DATE_FORMAT(`payment`.`created_at`, '%b. %d, %Y   %h:%i:%p') AS created_at 
                                , `payment`.`amount`
                            FROM
                                `hrms`.`payment`
@@ -246,7 +246,7 @@ WHERE `id` = ?;
             getDBConn();
             Statement st = getCon().createStatement();
             ResultSet rs = st.executeQuery(query);
-            
+
             while (rs.next()) {
                 Payment p = new Payment();
                 Bill bill = new Bill();
@@ -257,7 +257,7 @@ WHERE `id` = ?;
                 p.setCreatedAtF(rs.getString("CREATED_AT"));
                 p.setAmount(rs.getFloat("AMOUNT"));
                 p.setBill(bill);
-                
+
                 list.add(p);
             }
             rs.close();
@@ -268,9 +268,8 @@ WHERE `id` = ?;
         }
         return list;
     }
-    
-    
-   @Override
+
+    @Override
     public Long getMaxId() {
         Long maxId = null;
         try {
@@ -296,5 +295,33 @@ WHERE `id` = ?;
             JOptionPane.showMessageDialog(null, e.getMessage(), "Opss...", JOptionPane.ERROR_MESSAGE);
         }
         return maxId;
+    }
+
+    @Override
+    public void comboBoxInvoiceIdByUserId(Long userId) {
+        this.setList(new ArrayList<ComboBoxList>());
+        try {
+            getDBConn();
+            PreparedStatement statement;
+            ResultSet rs;
+            statement = getCon().prepareStatement("SELECT \n"
+                    + "  `id`,\n"
+                    + "  `created_at`,DATE_FORMAT(`created_at`, '%b %d,%Y %h:%i:%p') AS createAT \n"
+                    + "FROM\n"
+                    + "  `hrms`.`payment` WHERE user_id =? ORDER BY id DESC ;");
+            statement.setLong(1, userId);
+            rs = statement.executeQuery();
+            while (rs.next()) {
+                Long idl = rs.getLong("ID");
+                String createdAT = rs.getString("createAT");
+                this.getList().add(new ComboBoxList(idl, idl + "    [" + createdAT + "]"));
+            }
+            rs.close();
+            statement.close();
+            closeConnection();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 }

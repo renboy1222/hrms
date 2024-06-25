@@ -35,8 +35,9 @@ public class JPanelSales extends javax.swing.JPanel {
         initComponents();
         setTable();
         comboBoxUser();
-        comboBoxFromInvoice();
-        comboBoxToInvoice();
+        ComboBoxList userId = (ComboBoxList) this.jComboBoxUser.getSelectedItem();
+        comboBoxFromInvoice(userId.getId());
+        comboBoxToInvoice(userId.getId());
         jTextFieldSearch.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Search");
         calculateTotal();
     }
@@ -224,21 +225,29 @@ public class JPanelSales extends javax.swing.JPanel {
 
     private void jComboBoxUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxUserActionPerformed
         //        selectPaymentReceived();
-        ComboBoxList toId = (ComboBoxList) this.jComboBoxUser.getSelectedItem();
-        setUserId(toId.getId());
+        ComboBoxList userId = (ComboBoxList) this.jComboBoxUser.getSelectedItem();
+        setUserId(userId.getId());
+        comboBoxFromInvoice(userId.getId());
+        comboBoxToInvoice(userId.getId());
         selectPaymentReceived();
     }//GEN-LAST:event_jComboBoxUserActionPerformed
 
     private void jComboBoxFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxFromActionPerformed
 
-        ComboBoxList toId = (ComboBoxList) this.jComboBoxFrom.getSelectedItem();
-        setFromId(toId.getId());
+        if (jComboBoxFrom.getItemCount() != 0) {
+            ComboBoxList toId = (ComboBoxList) this.jComboBoxFrom.getSelectedItem();
+            setFromId(toId.getId());
+        }
         selectPaymentReceived();
+
+
     }//GEN-LAST:event_jComboBoxFromActionPerformed
 
     private void jComboBoxToActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxToActionPerformed
-        ComboBoxList toId = (ComboBoxList) this.jComboBoxTo.getSelectedItem();
-        setToId(toId.getId());
+        if (jComboBoxTo.getItemCount() != 0) {
+            ComboBoxList toId = (ComboBoxList) this.jComboBoxTo.getSelectedItem();
+            setToId(toId.getId());
+        }
         selectPaymentReceived();
     }//GEN-LAST:event_jComboBoxToActionPerformed
 
@@ -281,16 +290,16 @@ public class JPanelSales extends javax.swing.JPanel {
         }
     }
 
-    public void comboBoxFromInvoice() {
-        paymentDAOImpl.comboBoxInvoiceId();
+    public void comboBoxFromInvoice(Long userId) {
+        paymentDAOImpl.comboBoxInvoiceIdByUserId(userId);
         jComboBoxFrom.removeAllItems();
         for (ComboBoxList a : paymentDAOImpl.getList()) {
             this.jComboBoxFrom.addItem(a);
         }
     }
 
-    public void comboBoxToInvoice() {
-        paymentDAOImpl.comboBoxInvoiceId();
+    public void comboBoxToInvoice(Long userId) {
+        paymentDAOImpl.comboBoxInvoiceIdByUserId(userId);
         jComboBoxTo.removeAllItems();
         for (ComboBoxList a : paymentDAOImpl.getList()) {
             this.jComboBoxTo.addItem(a);
@@ -382,14 +391,14 @@ public class JPanelSales extends javax.swing.JPanel {
     }
 
     /**
-     * @return the toId
+     * @return the userId
      */
     public static Long getToId() {
         return toId;
     }
 
     /**
-     * @param aToId the toId to set
+     * @param aToId the userId to set
      */
     public static void setToId(Long aToId) {
         toId = aToId;

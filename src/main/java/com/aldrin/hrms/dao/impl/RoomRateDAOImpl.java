@@ -167,6 +167,7 @@ INSERT INTO `room_rate` (
 
     @Override
     public void comboBoxRoomDuration(RoomRate roomId) {
+        System.out.println("room id+:"+roomId.getRoom().getId());
         this.setList(new ArrayList<ComboBoxList>());
         try {
             getDBConn();

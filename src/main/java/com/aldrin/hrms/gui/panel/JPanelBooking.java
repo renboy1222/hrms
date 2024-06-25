@@ -366,9 +366,10 @@ public class JPanelBooking extends javax.swing.JPanel implements MouseListener {
             public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
                 Component component = super.prepareRenderer(renderer, row, column);
                 if (isRowSelected(row)) {
-                    component.setBackground(getSelectionBackground());
+//                    component.setBackground(getSelectionBackground());
                 } else {
-                    component.setBackground(row % 2 == 0 ? getBackground() : Color.decode("#F5F5F5")); // Alternate row color
+//                    component.setBackground(row % 2 == 0 ? getBackground() : Color.decode("#F5F5F5")); // Alternate row color
+//                    component.setBackground(row % 2 == 0 ? getBackground() : new Color(187,178,187)); // Alternate row color
                 }
 
                 return component;
@@ -547,9 +548,6 @@ public class JPanelBooking extends javax.swing.JPanel implements MouseListener {
 //            "DURATION", "CHECK-IN", "CHECK-OUT", "CHECK-IN UF", "PAID", "DOWN PAYMENT", "INSUFFICIENT", "REFUNDABLE","BILL ID"
             Payment p = paymentDAOImpl.selectRoomBookingPayments(r.getId());
             Booking bo = bookingDAOImpl.selectRoomBookingByRoomId(r.getId());
-//            if (bo.getReserve() != null) {
-//                reserve = true;
-//            }
             if (bo.getCheckOut() == null) {
                 tableModel.addRow(new Object[]{r.getId(), r.getRoomType().getId(), r.getRoomStatus().getId(), r.getRoomNumber(), df.format(r.getPrice()), r.getPrice(), r.getRoomStatus().getStatus(), r.getRoomType().getType(), r.getRoomType().getCapacity()});
             } else {
@@ -592,12 +590,15 @@ public class JPanelBooking extends javax.swing.JPanel implements MouseListener {
 
         JMenuItem itemRefresh = new JMenuItem("Refresh");
         itemRefresh.setIcon(new FlatSVGIcon("svg/refresh.svg", 16, 16));
-//        JMenuItem itemCancel = new JMenuItem("Cancel");
         itemCancel.setIcon(new FlatSVGIcon("svg/cancel.svg", 16, 16));
+        itemBooking.setIcon(new FlatSVGIcon("svg/book.svg", 16, 16));
+        itemReserve.setIcon(new FlatSVGIcon("svg/reserve.svg", 16, 16));
+        itemViewDetails.setIcon(new FlatSVGIcon("svg/details.svg", 16, 16));
+        itemCheckIn.setIcon(new FlatSVGIcon("svg/check-in.svg", 16, 16));
+        itemChangeRoom.setIcon(new FlatSVGIcon("svg/change_room.svg", 16, 16));
 
         for (int i = 0; i < jTable1.getRowCount(); i++) {
         }
-//        popupMenu.add(itemCancel);
         jTable1.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
@@ -607,9 +608,9 @@ public class JPanelBooking extends javax.swing.JPanel implements MouseListener {
                     popupMenu.removeAll();
                     if (reserve == null) {
                         popupMenu.removeAll();
-                        popupMenu.add(itemRefresh); 
+                        popupMenu.add(itemRefresh);
                         popupMenu.add(itemBooking);
-                        popupMenu.add(itemReserve);                 
+                        popupMenu.add(itemReserve);
                     } else if (reserve.equals(Boolean.TRUE)) {
                         popupMenu.add(itemRefresh);
                         popupMenu.add(itemCancel);
@@ -629,10 +630,7 @@ public class JPanelBooking extends javax.swing.JPanel implements MouseListener {
         itemRefresh.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                int selectedRow = jTable1.getSelectedRow();
-//                if (selectedRow != -1) {
                 selectRoom();
-//                }
             }
         });
         itemCancel.addActionListener(new ActionListener() {
@@ -650,6 +648,14 @@ public class JPanelBooking extends javax.swing.JPanel implements MouseListener {
                 } else if (reserve.equals(Boolean.FALSE)) {
                     popupMenu.add(itemRefresh);
                 }
+            }
+        });
+        itemBooking.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JDialogBooking booking = new JDialogBooking(jFrameHRMS, true);
+                booking.setVisible(true);
+                selectRoom();
             }
         });
     }

@@ -29,5 +29,7 @@ public interface PaymentDAO {
     public ArrayList<Payment> selectUserReceiveAmount(Long userId, Long from,Long to);
     
      public Long getMaxId();
+     
+     public void comboBoxInvoiceIdByUserId(Long userId);
 
 }
