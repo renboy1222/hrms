@@ -14,6 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -167,7 +168,7 @@ INSERT INTO `room_rate` (
 
     @Override
     public void comboBoxRoomDuration(RoomRate roomId) {
-        System.out.println("room id+:"+roomId.getRoom().getId());
+        System.out.println("room id+:" + roomId.getRoom().getId());
         this.setList(new ArrayList<ComboBoxList>());
         try {
             getDBConn();
@@ -329,6 +330,34 @@ INSERT INTO `room_rate` (
             ex.printStackTrace();
         }
         return rr;
+    }
+
+    @Override
+    public Long getMaxId() {
+        Long maxId = null;
+        try {
+            getDBConn();
+            PreparedStatement statement = getCon().prepareStatement("SELECT \n"
+                    + "    MAX(ROOM_RATE.ID) AS ID  \n"
+                    + "FROM \n"
+                    + "    ROOM_RATE ");
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                Long idl = rs.getLong("ID");
+                if (idl == 0) {
+                    maxId = 0L;
+                } else {
+                    maxId = idl;
+                }
+            }
+            rs.close();
+            statement.close();
+//            closeConnection();
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Opss...", JOptionPane.ERROR_MESSAGE);
+        }
+        return maxId;
     }
 
 }

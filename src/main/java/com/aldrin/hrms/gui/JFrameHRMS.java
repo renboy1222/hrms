@@ -113,7 +113,7 @@ public class JFrameHRMS extends javax.swing.JFrame {
         jButtonReports.putClientProperty("JButton.buttonType", "square");
         jButtonSettings.putClientProperty("JButton.buttonType", "square");
         jButtonUser.putClientProperty("JButton.buttonType", "square");
-        getRootPane().putClientProperty("JRootPane.titleBarBackground", new Color(0,102,153));
+        getRootPane().putClientProperty("JRootPane.titleBarBackground", new Color(78,80,82));
 
 
 
@@ -138,7 +138,6 @@ public class JFrameHRMS extends javax.swing.JFrame {
         jButtonSettings = new javax.swing.JButton();
         jButtonUser = new javax.swing.JButton();
         jPanel7 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         jToggleButton1 = new javax.swing.JToggleButton(new FlatSVGIcon("svg/dark.svg",24,24));
         jPanel2 = new javax.swing.JPanel();
@@ -228,11 +227,6 @@ public class JFrameHRMS extends javax.swing.JFrame {
 
         jPanel7.setOpaque(false);
         jPanel7.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jButton1.setBackground(new java.awt.Color(0, 102, 153));
-        jButton1.setText("jButton1");
-        jPanel7.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 70, -1, -1));
-
         jPanel4.add(jPanel7, java.awt.BorderLayout.CENTER);
 
         jPanel5.setPreferredSize(new java.awt.Dimension(10, 50));
@@ -301,7 +295,6 @@ public class JFrameHRMS extends javax.swing.JFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButtonBooking;
     private javax.swing.JButton jButtonReports;
     private javax.swing.JButton jButtonSales;

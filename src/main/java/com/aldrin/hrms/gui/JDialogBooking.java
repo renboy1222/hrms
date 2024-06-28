@@ -301,11 +301,16 @@ public class JDialogBooking extends javax.swing.JDialog implements MouseListener
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonAdBookingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAdBookingActionPerformed
-        JDialogAddBooking addBooking = new JDialogAddBooking(jFrameHrms, true);
-        addBooking.setVisible(true);
-        addBooking(addBooking.getAddBooking());
-        buttonPaymentAble();
-        totalPayment();
+        if (roomRateDAOImpl.getMaxId() < 1) {
+            JOptionPane.showMessageDialog(jFrameHrms, "All room has no rate.", "WARNING!!", JOptionPane.WARNING_MESSAGE);
+            return;
+        } else {
+            JDialogAddBooking addBooking = new JDialogAddBooking(jFrameHrms, true);
+            addBooking.setVisible(true);
+            addBooking(addBooking.getAddBooking());
+            buttonPaymentAble();
+            totalPayment();
+        }
 
     }//GEN-LAST:event_jButtonAdBookingActionPerformed
 

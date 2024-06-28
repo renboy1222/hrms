@@ -458,8 +458,14 @@ public class JDialogAddBooking extends javax.swing.JDialog {
         int mm = Integer.parseInt(ct.selectHourAndMinutes().getCurrentTime().substring(3, 5));
         String cDate = checkInDate + " " + jComboBoxStartHour.getSelectedItem().toString() + ":" + jComboBoxStartMinutes.getSelectedItem().toString() + ":" + "00";
         RoomRate rr = new RoomRate();
-        ComboBoxList rrIdl = (ComboBoxList) this.jComboBoxDuration.getSelectedItem();
-        rr.setId(rrIdl.getId());
+        if (jComboBoxDuration.getItemCount() == 0) {
+
+            return;
+        } else {
+            ComboBoxList rrIdl = (ComboBoxList) this.jComboBoxDuration.getSelectedItem();
+            rr.setId(rrIdl.getId());
+        }
+
         String checkOut = roomRateDAOImpl.calculateMinutesToCheckOutDuration(rr, cDate);
         jDateChooserEndDate.setDate(new Date(Integer.parseInt(checkOut.toString().substring(0, 4)) - 1900, Integer.parseInt(checkOut.toString().substring(5, 7)) - 1, Integer.parseInt(checkOut.substring(8, 10))));
         int hour = Integer.parseInt(checkOut.toString().substring(11, 13));
@@ -504,5 +510,10 @@ public class JDialogAddBooking extends javax.swing.JDialog {
         } catch (Exception e) {
         }
     }
+
+//    public static void main(String[] args) {
+//        JDialogAddBooking a = new JDialogAddBooking(null, true);
+//        a.setVisible(true);
+//    }
 
 }

@@ -7,6 +7,7 @@ package com.aldrin.hrms.gui.panel;
 import com.aldrin.hrms.dao.impl.BookingDAOImpl;
 import com.aldrin.hrms.dao.impl.PaymentDAOImpl;
 import com.aldrin.hrms.dao.impl.RoomDAOImpl;
+import com.aldrin.hrms.dao.impl.RoomRateDAOImpl;
 import com.aldrin.hrms.gui.JDialogBooking;
 import com.aldrin.hrms.gui.JFrameHRMS;
 import com.aldrin.hrms.model.Booking;
@@ -28,6 +29,7 @@ import java.awt.event.MouseListener;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.RowFilter;
@@ -58,6 +60,7 @@ public class JPanelBooking extends javax.swing.JPanel implements MouseListener {
     JMenuItem itemChangeRoom = new JMenuItem("Change Room");
     JMenuItem itemViewDetails = new JMenuItem("View Details");
     JMenuItem itemCheckIn = new JMenuItem("Check-in");
+    private RoomRateDAOImpl roomRateDAOImpl = new RoomRateDAOImpl();
 
     public JPanelBooking(JFrameHRMS jFrameHRMS) {
         initComponents();
@@ -278,9 +281,16 @@ public class JPanelBooking extends javax.swing.JPanel implements MouseListener {
     }//GEN-LAST:event_jTextFieldSearchKeyReleased
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        JDialogBooking booking = new JDialogBooking(jFrameHRMS, true);
-        booking.setVisible(true);
-        selectRoom();
+//        if (roomRateDAOImpl.getMaxId() < 1) {
+//            JOptionPane.showMessageDialog(jFrameHRMS, "All room has no rate.", "WARNING!!", JOptionPane.WARNING_MESSAGE);
+//            return;
+//        } else {
+            JDialogBooking booking = new JDialogBooking(jFrameHRMS, true);
+            booking.setVisible(true);
+            selectRoom();
+//        }
+
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
 

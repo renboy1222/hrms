@@ -34,4 +34,6 @@ public interface RoomRateDAO {
     public String calculateMinutesToCheckOutDuration(RoomRate roomRate, String checkOutDate);
     
     public RoomRate selectRoomInfo(RoomRate roomRate);
+    
+    public Long getMaxId();
 }

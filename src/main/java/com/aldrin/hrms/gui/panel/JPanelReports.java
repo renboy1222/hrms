@@ -37,7 +37,6 @@ public class JPanelReports extends javax.swing.JPanel {
     private JasperPrint JPrint;
     private JRViewer jrviewer;
 
-    JPanelDashboard panelDashboard = new JPanelDashboard();
 
     public JPanelReports() {
         initComponents();
