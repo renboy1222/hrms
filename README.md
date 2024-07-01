@@ -7,3 +7,6 @@
 
 **Add Booking/Reserve**
 ![Screenshot 2024-07-01 075208](https://github.com/renboy1222/hrms/assets/152495332/01e7e074-5be0-450c-bc20-ba75ed67d1a1)
+
+**Relational Schema**
+![schema (1)](https://github.com/renboy1222/AldrinPOS_MySQL/assets/152495332/6b064791-9768-471a-a4fa-b76f26bb223b)
