@@ -470,7 +470,6 @@ public class JDialogAddBooking extends javax.swing.JDialog {
         jDateChooserEndDate.setDate(new Date(Integer.parseInt(checkOut.toString().substring(0, 4)) - 1900, Integer.parseInt(checkOut.toString().substring(5, 7)) - 1, Integer.parseInt(checkOut.substring(8, 10))));
         int hour = Integer.parseInt(checkOut.toString().substring(11, 13));
         int minutes = Integer.parseInt(checkOut.toString().substring(14, 16));
-        System.out.println("hour::" + hour);
         if (hour > 12) {
             //PM
             jComboBoxEndHour.setSelectedIndex(Integer.parseInt(checkOut.toString().substring(11, 13)) - 13);
