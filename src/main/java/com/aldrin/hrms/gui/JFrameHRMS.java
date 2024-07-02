@@ -88,16 +88,14 @@ public class JFrameHRMS extends javax.swing.JFrame {
         String storedUsername = preferences.get(USERNAME_PREF_KEY, null);
         String storedPassword = preferences.get(PASSWORD_PREF_KEY, null);
         loginUser.setUser(null);
-        this.jFrameHRMS =this;
-
-        saveLoginCredentials();
+        this.jFrameHRMS = this;
 
         cardsPanel.add(panelBooking, "Booking");
         cardsPanel.add(panelSales, "Sales");
         cardsPanel.add(panelReports, "Reports");
         cardsPanel.add(panelSettings, "Settings");
         jPanel2.add(cardsPanel, BorderLayout.CENTER);
-
+        saveLoginCredentials();
         popUpMenuSettings();
         popUpMenuUser();
 
@@ -113,9 +111,7 @@ public class JFrameHRMS extends javax.swing.JFrame {
         jButtonReports.putClientProperty("JButton.buttonType", "square");
         jButtonSettings.putClientProperty("JButton.buttonType", "square");
         jButtonUser.putClientProperty("JButton.buttonType", "square");
-        getRootPane().putClientProperty("JRootPane.titleBarBackground", new Color(78,80,82));
-
-
+        getRootPane().putClientProperty("JRootPane.titleBarBackground", new Color(78, 80, 82));
 
     }
 
@@ -341,6 +337,7 @@ private void loginUser() {
             jButtonUser.setText(loginUser.getUser().getFirstname());
         } else {
 //            logout
+
             jPanelSideBarButtons.removeAll();
             jPanelSideBarButtons.setVisible(true);
             jPanelSideBarButtons.add(jButtonUser);
@@ -357,7 +354,7 @@ private void loginUser() {
             menuItemChangePassword.setVisible(false);
             jButtonUser.setIcon(new FlatSVGIcon("svg/user.svg", 24, 24));
             jButtonUser.setText("User");
-
+            cardsPanel.setVisible(false);
         }
 
     }
@@ -633,7 +630,7 @@ private void loginUser() {
 
     private void clickSideBarButton(JButton button) {
         try {
-            if (jButtonBooking == button) {  
+            if (jButtonBooking == button) {
 //                jButtonSales.setBackground(new Color(78,80,82));
 //                jButtonReports.setBackground(new Color(78,80,82));
 //                jButtonBooking.setBackground(new Color(0, 153, 204));
