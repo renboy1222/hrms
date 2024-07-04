@@ -10,6 +10,7 @@ import com.aldrin.hrms.dao.impl.UserDAOImpl;
 import com.aldrin.hrms.model.User;
 import com.aldrin.hrms.util.LoginUser;
 import com.formdev.flatlaf.FlatClientProperties;
+import java.awt.event.KeyEvent;
 import java.util.prefs.Preferences;
 
 /**
@@ -76,6 +77,11 @@ public class JDialogLogin extends javax.swing.JDialog {
 
         jPasswordFieldPassword.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jPasswordFieldPassword.setPreferredSize(new java.awt.Dimension(64, 32));
+        jPasswordFieldPassword.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jPasswordFieldPasswordKeyPressed(evt);
+            }
+        });
         getContentPane().add(jPasswordFieldPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(5, 185, 440, -1));
 
         jCheckBoxRememberMe.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
@@ -107,6 +113,12 @@ public class JDialogLogin extends javax.swing.JDialog {
         login();
 
     }//GEN-LAST:event_jButtonLoginActionPerformed
+
+    private void jPasswordFieldPasswordKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPasswordFieldPasswordKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            login();
+        }
+    }//GEN-LAST:event_jPasswordFieldPasswordKeyPressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

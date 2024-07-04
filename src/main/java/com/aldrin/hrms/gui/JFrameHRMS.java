@@ -26,7 +26,6 @@ import com.formdev.flatlaf.FlatLightLaf;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
@@ -88,14 +87,15 @@ public class JFrameHRMS extends javax.swing.JFrame {
         String storedUsername = preferences.get(USERNAME_PREF_KEY, null);
         String storedPassword = preferences.get(PASSWORD_PREF_KEY, null);
         loginUser.setUser(null);
-        this.jFrameHRMS = this;
-
         cardsPanel.add(panelBooking, "Booking");
         cardsPanel.add(panelSales, "Sales");
         cardsPanel.add(panelReports, "Reports");
         cardsPanel.add(panelSettings, "Settings");
-        jPanel2.add(cardsPanel, BorderLayout.CENTER);
+
         saveLoginCredentials();
+
+        jPanel2.add(cardsPanel, BorderLayout.CENTER);
+        this.jFrameHRMS = this;
         popUpMenuSettings();
         popUpMenuUser();
 
@@ -106,12 +106,6 @@ public class JFrameHRMS extends javax.swing.JFrame {
         });
         toggleIcon();
         clickSideBarButton(jButtonBooking);
-        jButtonBooking.putClientProperty("JButton.buttonType", "square");
-        jButtonSales.putClientProperty("JButton.buttonType", "square");
-        jButtonReports.putClientProperty("JButton.buttonType", "square");
-        jButtonSettings.putClientProperty("JButton.buttonType", "square");
-        jButtonUser.putClientProperty("JButton.buttonType", "square");
-        getRootPane().putClientProperty("JRootPane.titleBarBackground", new Color(78, 80, 82));
 
     }
 
@@ -355,6 +349,7 @@ private void loginUser() {
             jButtonUser.setIcon(new FlatSVGIcon("svg/user.svg", 24, 24));
             jButtonUser.setText("User");
             cardsPanel.setVisible(false);
+            cardsPanel.removeAll();
         }
 
     }
@@ -389,7 +384,7 @@ private void loginUser() {
                 loginUser();
                 JDialogLogin logIn = new JDialogLogin(this, true);
                 logIn.setVisible(true);
-                loginUser();
+//                loginUser();
             }
             addPanels();
 
