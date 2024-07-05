@@ -87,12 +87,13 @@ public class JFrameHRMS extends javax.swing.JFrame {
         String storedUsername = preferences.get(USERNAME_PREF_KEY, null);
         String storedPassword = preferences.get(PASSWORD_PREF_KEY, null);
         loginUser.setUser(null);
+        saveLoginCredentials();
+
         cardsPanel.add(panelBooking, "Booking");
         cardsPanel.add(panelSales, "Sales");
         cardsPanel.add(panelReports, "Reports");
         cardsPanel.add(panelSettings, "Settings");
-
-        saveLoginCredentials();
+        cardLayout.show(cardsPanel, "Booking");
 
         jPanel2.add(cardsPanel, BorderLayout.CENTER);
         this.jFrameHRMS = this;
@@ -302,12 +303,15 @@ public class JFrameHRMS extends javax.swing.JFrame {
 private void loginUser() {
         if (loginUser.getUser() != null) {
 //            login 
+            cardsPanel.removeAll();
             cardsPanel.setVisible(true);
-            cardsPanel.add(panelBooking, "Booking");
-            cardsPanel.add(panelSales, "Sales");
-            cardsPanel.add(panelReports, "Reports");
+            cardsPanel.add(new JPanelBooking(this), "Booking");
+            cardsPanel.add(new JPanelSales(), "Sales");
+            cardsPanel.add(new JPanelReports(), "Reports");
             cardsPanel.add(panelSettings, "Settings");
+            cardLayout.show(cardsPanel, "Booking");
             jPanel2.add(cardsPanel, BorderLayout.CENTER);
+
             jPanelSideBarButtons.setVisible(true);
             displayPicture(loginUser.getUser());
             if (loginUser.getUser().getRole().getRole().equals("ADMIN")) {
@@ -348,8 +352,8 @@ private void loginUser() {
             menuItemChangePassword.setVisible(false);
             jButtonUser.setIcon(new FlatSVGIcon("svg/user.svg", 24, 24));
             jButtonUser.setText("User");
-            cardsPanel.setVisible(false);
-            cardsPanel.removeAll();
+//            cardsPanel.setVisible(false);
+//            cardsPanel.removeAll();
         }
 
     }
@@ -384,7 +388,7 @@ private void loginUser() {
                 loginUser();
                 JDialogLogin logIn = new JDialogLogin(this, true);
                 logIn.setVisible(true);
-//                loginUser();
+                loginUser();
             }
             addPanels();
 
