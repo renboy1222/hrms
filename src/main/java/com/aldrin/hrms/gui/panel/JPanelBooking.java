@@ -440,6 +440,10 @@ public class JPanelBooking extends javax.swing.JPanel implements MouseListener {
         hide5.setMinWidth(0);
         hide5.setMaxWidth(0);
         hide5.setPreferredWidth(0);
+        TableColumn hide6 = jTable1.getColumnModel().getColumn(6);
+        hide6.setMinWidth(0);
+        hide6.setMaxWidth(0);
+        hide6.setPreferredWidth(0);
         TableColumn hide12 = jTable1.getColumnModel().getColumn(12);
         hide12.setMinWidth(0);
         hide12.setMaxWidth(0);
@@ -448,10 +452,10 @@ public class JPanelBooking extends javax.swing.JPanel implements MouseListener {
         hide13.setMinWidth(0);
         hide13.setMaxWidth(0);
         hide13.setPreferredWidth(0);
-        TableColumn hide6 = jTable1.getColumnModel().getColumn(18);
-        hide6.setMinWidth(0);
-        hide6.setMaxWidth(0);
-        hide6.setPreferredWidth(0);
+        TableColumn hide18 = jTable1.getColumnModel().getColumn(18);
+        hide18.setMinWidth(0);
+        hide18.setMaxWidth(0);
+        hide18.setPreferredWidth(0);
 
 //"STOCK IN ID", "UNIT", "PRODUCT", "QUANTITY", "PRICE", "LINE TOTAL"
         TableColumn[] column = new TableColumn[100];
